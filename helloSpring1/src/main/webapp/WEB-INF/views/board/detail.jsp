@@ -37,7 +37,7 @@
     </table>
     <tr>
 		<th style="width:10%">댓글 작성자</th>
-		<th style="width:10%">댓글내용</th>
+		<th style="width:10%">댓글내용텟</th>
 					 
 	</tr>
     <div>
