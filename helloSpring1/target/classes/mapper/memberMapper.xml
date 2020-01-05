@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ 
+<mapper namespace="org.hello.mapper.memberMapper">
+	<!-- 회원가입 -->
+    <insert id="register">
+        insert into bbs.login(userID,userPW,userName) values
+                          (#{userID},#{userPW},#{userName})
+    </insert>
+	
+	<!-- 로그인 -->
+	<select id="login" resultType="org.member.memberVO.MemberVO">
+		select userID, userName
+		from bbs.login
+		where userID = #{userID} and userPW=#{userPW}
+	</select>
+	
+	<!-- 회원정보 수정 -->
+	<update id="modify">
+		update bbs.login set userPW = #{userPW}
+		where userID = #{userID}
+	</update>
+	
+	
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace = "org.hello.mapper.boardMapper">
+
+	<!-- 게시판 추가 -->
+	<insert id = "insertBoard">
+		insert into bbs.hello_board (b_title, b_writer, b_detail, b_date) values(#{b_title},#{b_writer},#{b_detail},SYSDATE())
+	
+	</insert>
+	
+	<!-- 게시판 조회 -->
+	<select id = "searchBoard" resultType="org.hello.domain.BoardVO">
+		select 
+			b_no ,
+			b_title ,
+			b_detail ,
+        	b_writer ,
+        	b_date ,
+        	b_count 
+		from bbs.hello_board
+		where b_no = #{b_no}
+	
+	</select>
+	
+	<!-- 전체 게시글 수 조회 -->
+	<select id = "listCnt" resultType = "int">
+		select count(*) AS count
+		from bbs.hello_board
+	
+	</select>
+		
+	
+	<!-- 게시판 리스트 보기 -->
+	<select id = "listBoard" resultType="java.util.Map">
+		select b_no ,
+			b_title ,
+			b_detail ,
+        	b_writer ,
+        	b_date ,
+        	b_count 
+		from bbs.hello_board
+		order by b_no DESC
+		LIMIT #{pageStart}, #{perPageNum}
+	</select>
+	
+	
+	
+	
+	<!-- 게시판 상세 보기 -->
+	<select id="detailBoard" resultType="org.hello.domain.BoardVO">
+		select * 
+			from bbs.hello_board 
+		where b_no = #{b_no}
+	</select>
+	
+	
+	<!-- 게시판 삭제 -->
+	<delete id="deleteBoard" parameterType="int">
+		delete from bbs.hello_board where b_no = #{b_no}
+	</delete>
+	
+	<!-- 게시판 수정하기 -->
+	<update id="updateBoard">
+		update bbs.hello_board set b_title=#{b_title} , b_detail = #{b_detail} where b_no = #{b_no}
+	</update>
+	
+	<!-- 조회수 1증가 -->
+	<update id="updatecntBoard">
+		update bbs.hello_board set b_count = b_count+1 where b_no= #{b_no}
+	</update>
+</mapper>
+
