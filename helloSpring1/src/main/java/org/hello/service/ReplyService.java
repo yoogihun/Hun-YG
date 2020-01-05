@@ -6,12 +6,14 @@ import java.util.Map;
 import org.hello.domain.ReplyVO;
 
 public interface ReplyService {
+	
 	List<ReplyVO> readReply(Integer b_no) throws Exception;
 	
 	public void createRp(ReplyVO vo) throws Exception;
 	
 	Map<String,Object> ReplyCk(ReplyVO vo) throws Exception;
 
+	public void updateReply(ReplyVO vo) throws Exception;
 	
-	
+	Map<String,Object> detailReply(ReplyVO vo) throws Exception;
 }

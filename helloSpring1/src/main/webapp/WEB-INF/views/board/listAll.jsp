@@ -21,8 +21,7 @@
     	perPageNum.set("perPageNum", obj.value)
     	document.perPageNum.submit();
     } */ 
-    const a = ch
-    console.log(a)
+    
     
 </script>
  

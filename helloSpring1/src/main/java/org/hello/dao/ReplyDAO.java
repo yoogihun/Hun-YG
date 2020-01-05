@@ -11,5 +11,9 @@ public interface ReplyDAO {
 	
 	public void createRp(ReplyVO vo) throws Exception;
 	
+	public Map<String, Object> detailReply(ReplyVO vo) throws Exception;
+	
 	public Map<String, Object> ReplyCk(ReplyVO vo) throws Exception;
+	
+	public void updateReply(ReplyVO vo) throws Exception;
 }

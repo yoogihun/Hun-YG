@@ -6,12 +6,12 @@
   
 <mapper namespace = "org.hello.mapper.replyMapper">
 <!-- 댓글 조회 -->
-	<select id="readReply" resultType="org.hello.domain.ReplyVO">
+	<select id="readReply" resultType="java.util.Map">
 		select
-			r_no,
-			content,
-			writer,
-			regDate
+			r_no as r_no,
+			content as content,
+			writer as writer,
+			regDate as regDate
 		from bbs.myReply
 			where b_no = #{b_no}
 	</select>
@@ -31,4 +31,24 @@
 	
 	</select>
 
+<!-- 특정 댓글 조회 -->
+	<select id = "detailReply" resultType="java.util.Map">
+		select
+			content,
+			writer,
+			regDate
+		from bbs.myReply
+			where b_no = ${b_no} AND r_no = ${r_no}
+	
+	</select>	
+	
+	
+	
+<!-- 댓글 수정 -->
+	<update id="UpdateReply">
+		update bbs.myreply set content = ${content}
+			
+		where b_no = ${b_no} AND r_no = ${r_no}	
+	</update>
+	
 </mapper>

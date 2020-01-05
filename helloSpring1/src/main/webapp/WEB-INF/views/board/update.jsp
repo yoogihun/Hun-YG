@@ -14,7 +14,7 @@
 	
    	 
      <form action ="/board/update" method="POST">
-     		<label >글 번호</label>
+     		
             <input type="hidden" name="b_no" value="${boardVO.b_no }" readonly="readonly">
         
      		

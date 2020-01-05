@@ -61,14 +61,17 @@ public class BoardController {
 	public String createPOST(BoardVO board, MemberVO vo, HttpServletRequest req, RedirectAttributes rttr,Model model,HttpSession session) throws Exception {
 		System.out.println("/board/create 입니다. POST 방식" );	
 		service.create(board);
-		Object loginInfo = session.getAttribute("member");
+		
 		rttr.addFlashAttribute("msg", "성공");
 		
 		return "redirect:/board/listAll?page=1";
 	}
 
+	
 	@RequestMapping(value = "/listAll", method = RequestMethod.GET)
 	public void listAll(Criteria cri, BoardVO board, Model model,HttpSession session) throws Exception {
+		
+		
 		System.out.println("전체목록 페이지 겟");
 		cri.setPerPageNum(10);
 		
@@ -93,10 +96,10 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/listAll", method = RequestMethod.POST)
-	public void listAllpost(@RequestParam("ck") String ck,@RequestParam("perPageNum") Integer perPageNum, Criteria cri, BoardVO board, Model model,HttpSession session) throws Exception {
+	public void listAllpost(@RequestParam("perPageNum") Integer perPageNum, Criteria cri, BoardVO board, Model model,HttpSession session) throws Exception {
 		System.out.println("전체목록 페이지 포스트");
 		System.out.println("gihun----"+perPageNum);
-		System.out.println("체크박스 체크됨"+ck);
+		
 		Map<String,Object> paramMap = new HashMap<String,Object>();
 		int param = perPageNum;
 		paramMap.put("perPageNum", param);
@@ -123,7 +126,7 @@ public class BoardController {
 		System.out.println("상세목록  페이지 겟");
 		System.out.println(b_no);
 		List<ReplyVO> replyVO = replyService.readReply(b_no);
-		
+		System.out.println(replyVO);
 		Map<String, Object> ckmap = replyService.ReplyCk(vo);
 		System.out.println(ckmap);
 		model.addAttribute(/* "BoardVO" */ service.read(b_no));
@@ -150,6 +153,13 @@ public class BoardController {
 		System.out.println("상세목록  페이지 포스트");
 		System.out.println("포스트 글번호"+b_no);
 		System.out.println("포스트 댓글번호"+r_no);
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		map.put("b_no",b_no);
+		map.put("r_no",r_no);
+		
+		
+		
 		model.addAttribute(/* "BoardVO" */ service.read(b_no));
 		replyService.createRp(vo);
 		
@@ -227,5 +237,44 @@ public class BoardController {
 		}
 		
 	}
+	
+	@RequestMapping(value = "/replyupdate", method = RequestMethod.GET)
+	public void replyupdateget(ReplyVO vo, Model model, HttpSession session) throws Exception {
+		System.out.println("겟 댓글수정");
+		//System.out.println("넘겨받은 댓글의 글번호"+b_no);
+		//System.out.println("넘겨받은 댓글의 번호"+r_no);
+		model.addAttribute("rep", vo);
+		
+		Object loginInfo = session.getAttribute("member");
+		if(loginInfo == null) {
+			model.addAttribute("msg", false);
+		}
+		
+	}
+	
+	
+	
+	@RequestMapping(value = "/replyupdate", method = RequestMethod.POST)
+	public String replyupdatepost(@RequestParam("r_no") Integer r_no,@RequestParam("b_no") Integer b_no,@RequestParam("content") String content,@RequestParam("writer") String writer,ReplyVO vo, Model model, HttpSession session) throws Exception {
+		System.out.println("포스트 댓글수정");
+		System.out.println(b_no);
+		System.out.println(r_no);
+		System.out.println(writer);
+		System.out.println(content);
+		replyService.updateReply(vo);
+		
+		
+		Object loginInfo = session.getAttribute("member");
+		if(loginInfo == null) {
+			model.addAttribute("msg", false);
+		}
+		
+		return "redirect:/board/detail?b_no="+b_no;
+		
+	}
+	
+	
+	
+	
 	
 }

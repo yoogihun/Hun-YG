@@ -31,4 +31,15 @@ public class ReplyDAOImpl implements ReplyDAO {
 	public Map<String,Object> ReplyCk(ReplyVO vo) throws Exception{
 		return sqlSession.selectOne(namespace+".ReplyCk", vo);
 	}
+	
+	@Override
+	public void updateReply(ReplyVO vo) throws Exception{
+		sqlSession.update(namespace + ".UpdateReply", vo);
+	}
+	
+	@Override
+	public Map<String,Object> detailReply(ReplyVO vo) throws Exception{
+		return sqlSession.selectOne(namespace + ".detailReply", vo);
+		
+	}
 }

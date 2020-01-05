@@ -30,4 +30,14 @@ public class ReplyServiceImpl implements ReplyService {
 	public Map<String, Object> ReplyCk(ReplyVO vo) throws Exception{
 		return dao.ReplyCk(vo);
 	}
+	
+	@Override
+	public void updateReply(ReplyVO vo) throws Exception{
+		dao.updateReply(vo);
+	}
+	
+	@Override
+	public Map<String, Object> detailReply(ReplyVO vo) throws Exception{
+		return dao.detailReply(vo);
+	}
 }
