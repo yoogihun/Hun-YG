@@ -149,7 +149,7 @@ public class BoardController {
 
 	
 	@RequestMapping(value = "/detail", method = RequestMethod.POST)
-	public String readpost(@RequestParam("r_no") Integer r_no, ReplyVO vo,@RequestParam("b_no") Integer b_no, Model model,HttpSession session) throws Exception {
+	public String readpost(@RequestParam("content") String content,@RequestParam("r_no") Integer r_no, ReplyVO vo,@RequestParam("b_no") Integer b_no, Model model,HttpSession session) throws Exception {
 		System.out.println("상세목록  페이지 포스트");
 		System.out.println("포스트 글번호"+b_no);
 		System.out.println("포스트 댓글번호"+r_no);
@@ -157,6 +157,7 @@ public class BoardController {
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("b_no",b_no);
 		map.put("r_no",r_no);
+		
 		
 		
 		
@@ -260,7 +261,10 @@ public class BoardController {
 		System.out.println(b_no);
 		System.out.println(r_no);
 		System.out.println(writer);
-		System.out.println(content);
+		
+		String content_2 = '"'+content+'"';
+		vo.setContent(content_2);
+		System.out.println(content_2);
 		replyService.updateReply(vo);
 		
 		
@@ -273,6 +277,13 @@ public class BoardController {
 		
 	}
 	
+	@RequestMapping(value = "/javascripts", method = RequestMethod.GET)
+	public void test(ReplyVO vo, Model model, HttpSession session) throws Exception {
+		
+		
+		
+		
+	}
 	
 	
 	

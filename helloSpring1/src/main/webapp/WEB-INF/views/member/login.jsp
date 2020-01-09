@@ -6,8 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
 </head>
 <body>
+
 <c:if test="${member == null }">
 	<form action="/member/login" method="post">
 		<label>아이디</label>
