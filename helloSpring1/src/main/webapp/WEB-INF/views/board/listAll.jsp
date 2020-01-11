@@ -128,8 +128,8 @@
     </li>
 </ul>
 	
-
-     
+<input type ="button" onclick="location.href='/board/javascripts'" value="지도">
+<a href="/board/javascripts">지도</a>
 </body>
 </html>
 
