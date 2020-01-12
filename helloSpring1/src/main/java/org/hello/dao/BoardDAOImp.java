@@ -21,7 +21,6 @@ public class BoardDAOImp implements BoardDAO {
     @Override
     public void create(BoardVO vo) throws Exception {
         sqlSession.insert(namespace+".insertBoard", vo);
- 
     }
     
     //게시판보기

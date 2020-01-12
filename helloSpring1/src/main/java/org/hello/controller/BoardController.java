@@ -11,8 +11,10 @@ import javax.servlet.http.HttpSession;
 import org.hello.domain.BoardVO;
 import org.hello.domain.Criteria;
 import org.hello.domain.PageMaker;
+import org.hello.domain.PointVO;
 import org.hello.domain.ReplyVO;
 import org.hello.service.BoardService;
+import org.hello.service.PointService;
 import org.hello.service.ReplyService;
 import org.member.memberVO.MemberVO;
 import org.springframework.stereotype.Controller;
@@ -34,6 +36,9 @@ public class BoardController {
 	
 	@Inject
 	private ReplyService replyService;
+	
+	@Inject
+	private PointService pointService;
 	
 	
 	@RequestMapping(value="/create",method=RequestMethod.GET) 
@@ -87,6 +92,7 @@ public class BoardController {
 	    pageMaker.setCri(cri);
 	    pageMaker.setTotalCount(test);
 	    
+	    System.out.println(list+"전체리스트");
 
         
               
@@ -278,10 +284,14 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/javascripts", method = RequestMethod.GET)
-	public void test(ReplyVO vo, Model model, HttpSession session) throws Exception {
+	public void test(PointVO vo, Model model, HttpSession session) throws Exception {
 		
+		List test = pointService.point(vo);
 		
+		List<Map<String,Object>> list = test;
+		System.out.println(list); 
 		
+		model.addAttribute("poi", list);
 		
 	}
 	

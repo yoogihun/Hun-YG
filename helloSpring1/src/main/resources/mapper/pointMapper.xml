@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ 
+<mapper namespace="org.hello.mapper.pointMapper">
+	<!-- 위치조회 -->
+	<select id="point_select" resultType="java.util.Map">
+		select point_id as point_id,
+			point_name as point_name,
+			point_lat as point_lat,
+			point_lng as point_lng
+		from bbs.marker_lat_lng
+	</select>
+	
+</mapper>
