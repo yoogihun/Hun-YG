@@ -17,4 +17,9 @@ public class PointServiceImpl implements PointService {
 	public List<PointVO> point(PointVO vo) throws Exception{
 		return dao.point(vo);
 	}
+	
+	@Override
+	public void point_reg(PointVO vo) throws Exception{
+		dao.point_reg(vo);
+	}
 }

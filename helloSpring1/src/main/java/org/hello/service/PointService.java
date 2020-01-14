@@ -7,4 +7,6 @@ import org.hello.domain.PointVO;
 public interface PointService {
 	
 	List<PointVO> point(PointVO vo) throws Exception;
+	
+	public void point_reg(PointVO vo) throws Exception;
 }

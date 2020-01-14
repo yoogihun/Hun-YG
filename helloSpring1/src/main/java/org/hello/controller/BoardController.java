@@ -284,17 +284,30 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/javascripts", method = RequestMethod.GET)
-	public void test(PointVO vo, Model model, HttpSession session) throws Exception {
+	public void test_get(PointVO vo, Model model, HttpSession session) throws Exception {
 		
 		List test = pointService.point(vo);
 		
 		List<Map<String,Object>> list = test;
+		
 		System.out.println(list); 
 		
 		model.addAttribute("poi", list);
 		
 	}
 	
+	@RequestMapping(value = "/javascripts", method = RequestMethod.POST)
+	public void test_post(PointVO vo, Model model, HttpSession session) throws Exception {
+		
+		pointService.point_reg(vo);
+		
+	}
+	
+	@RequestMapping(value = "/point_reg_Popup", method = RequestMethod.GET)
+	public void reg_popup(PointVO vo, Model model, HttpSession session) throws Exception {
+		
+		
+	}
 	
 	
 	

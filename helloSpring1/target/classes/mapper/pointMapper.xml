@@ -15,4 +15,12 @@
 		from bbs.marker_lat_lng
 	</select>
 	
+	<!-- 위치등록 -->
+	<insert id="point_reg">
+		insert into bbs.marker_lat_lng values(
+		#{point_id},#{point_name},#{point_lat},#{point_lng}
+		)
+	
+	</insert>
+	
 </mapper>

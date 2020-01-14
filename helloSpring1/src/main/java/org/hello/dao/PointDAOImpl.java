@@ -22,6 +22,11 @@ public class PointDAOImpl implements PointDAO {
 	public List<PointVO> point(PointVO vo) throws Exception{
 		return sqlSession.selectList(namespace + ".point_select", vo);
 	}
+	
+	@Override
+	public void point_reg(PointVO vo) throws Exception{
+		sqlSession.insert(namespace + ".point_reg", vo);
+	}
 
 
 }
