@@ -1,6 +1,7 @@
 package org.hello.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -28,5 +29,8 @@ public class PointDAOImpl implements PointDAO {
 		sqlSession.insert(namespace + ".point_reg", vo);
 	}
 
-
+	@Override
+	public Map<String,Object> point_max_id(PointVO vo) throws Exception{
+		return sqlSession.selectOne(namespace + ".point_id_select", vo);
+	}
 }

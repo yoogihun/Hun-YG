@@ -304,11 +304,22 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/point_reg_Popup", method = RequestMethod.GET)
-	public void reg_popup(PointVO vo, Model model, HttpSession session) throws Exception {
+	public void reg_popup_get(PointVO vo, Model model, HttpSession session) throws Exception {
+		System.out.println("°ÙÆË¾÷");
 		
 		
 	}
 	
-	
+	@RequestMapping(value = "/point_reg_Popup", method = RequestMethod.POST)
+	public void reg_popup_post(PointVO vo, Model model, HttpSession session) throws Exception {
+		System.out.println("Æ÷½ºÆ®ÆË¾÷");
+		Map<String,Object> map = pointService.point_max_id(vo);
+		String a = (String) map.get("point_id");
+		
+		System.out.println(a.substring(2));
+		
+		
+		
+	}
 	
 }

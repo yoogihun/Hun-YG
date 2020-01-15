@@ -89,21 +89,24 @@
 	
    <script>
    var setPopup;
+	var lat;
+	var lng;
 	
 	function popup(){
 		
-           var url = "/board/point_reg_Popup";
-           var name = "point_regist_popup";
-           var option = "width = 700px, height = 500px, top = 100, left = 200, location = no"
-           setPopup = window.open(url, name, option);
-               
+        var url = "/board/point_reg_Popup";
+        var name = "point_regist_popup";
+        var option = "width = 700px, height = 500px, top = 100, left = 200, location = no"
+        setPopup = window.open(url, name, option);
 	}
-   
-   
+	
+	
     function marker(){
 		alert("등록할 지점을 선택하세요")	
 		kakao.maps.event.addListener(map, 'click', function(mouseEvent){
-	   		
+			
+			
+			
 			// 클릭한 위도, 경도 정보를 가져옵니다 
 	   	    var latlng = mouseEvent.latLng;
 	   		
@@ -121,8 +124,8 @@
 			// 마커 드래그 가능
 			marker.setDraggable(true);
 			
-			var lat = latlng.getLat(),
-				lng = latlng.getLng();
+			lat = latlng.getLat(),
+			lng = latlng.getLng();
 			
 			
 			
@@ -131,7 +134,7 @@
 			
 			var iwContent = '지점명:'+'<input type = "text" id = "point_name" name="point_name" placeholder="입력"><br/>위도:'+lat+'<br/>경도:'+lng,
 		    	iwRemoveable = true;
-				iwPosition = new kakao.maps.LatLng(latlng.getLat(), latlng.getLng()); //인포윈도우 표시 위치입니다
+				iwPosition = new kakao.maps.LatLng(lat, lng); //인포윈도우 표시 위치입니다
 		    console.log(iwContent);
 			// 인포윈도우를 생성합니다
 			var infowindow = new kakao.maps.InfoWindow({
@@ -139,20 +142,23 @@
 		    content : iwContent,
 		    removable : iwRemoveable
 			});
+			console.log(lat+"hhh");
+			console.log(lng+"gg")
+				popup();
+				
 			
-			popup();
-			setPopup.document.getElementById("point_lat").value = latlng.getLat();
-	        setPopup.document.getElementById("point_lng").value = latlng.getLng();
+			
 			 			 		
    	    console.log(latlng+"test")
    	   
    	    var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
    	    message += '경도는 ' + latlng.getLng() + ' 입니다';
-   	    
+   	 
    	    var resultDiv = document.getElementById('result');
    	    console.log(resultDiv);
    	    resultDiv.innerText = message;
    	 	
+   		
    	    
    	    
    	    // 마커에 클릭이벤트를 등록합니다
@@ -163,11 +169,13 @@
 		});
 		
 	}
+    
+    function set(){
+		setPopup.document.getElementById("point_lat").value = lat;
+	    setPopup.document.getElementById("point_lng").value = lng;	
+			
+	}
     </script>
-    
-   
-    
-    
    
    <script>
    	function mvcenter(){
@@ -250,7 +258,7 @@
    ${poi.get(1).get("point_lat") }
    
     <input type="button" onclick="popup()" value="팝업">
-    
+    <input type="button" onclick="set()" value="전달">
 
 
 

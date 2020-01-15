@@ -1,6 +1,7 @@
 package org.hello.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -21,5 +22,10 @@ public class PointServiceImpl implements PointService {
 	@Override
 	public void point_reg(PointVO vo) throws Exception{
 		dao.point_reg(vo);
+	}
+	
+	@Override
+	public Map<String,Object> point_max_id(PointVO vo) throws Exception{
+		return dao.point_max_id(vo);
 	}
 }

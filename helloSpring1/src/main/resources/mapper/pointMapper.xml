@@ -23,4 +23,11 @@
 	
 	</insert>
 	
+	
+	<select id ="point_id_select" resultType="java.util.Map">
+		select max(point_id) as point_id
+		from bbs.marker_lat_lng;
+	</select>
+	
+	
 </mapper>
