@@ -316,10 +316,16 @@ public class BoardController {
 		Map<String,Object> map = pointService.point_max_id(vo);
 		String a = (String) map.get("point_id");
 		
+		// b는 a의 숫자 부분만 잘라온다.
 		String b = a.substring(2);
+		// c 는 문자열 b를 숫자로 변환해준다.
 		int c = Integer.parseInt(b)+1;
+		// 숫자 c를 문자열 d로 변환시켜준다.
 		String d = Integer.toString(c);
+		// 문자열 d의 길이를 e에 저장한다.
 		int e = d.length();
+		
+		// d의 길이가 8보다 작을경우, 문자열 0을 7-e 만큼 반복하고, GM을 붙여 10자리로 만들어 point_id를 세팅해준다.
 		if(e<8) {
 			for(int i = 0; i<=7-e; i++) {
 				d = "0"+d;
