@@ -316,7 +316,26 @@ public class BoardController {
 		Map<String,Object> map = pointService.point_max_id(vo);
 		String a = (String) map.get("point_id");
 		
-		System.out.println(a.substring(2));
+		String b = a.substring(2);
+		int c = Integer.parseInt(b)+1;
+		String d = Integer.toString(c);
+		int e = d.length();
+		if(e<8) {
+			for(int i = 0; i<=7-e; i++) {
+				d = "0"+d;
+			}
+			String f = "GM"+d;
+			vo.setPoint_id(f);
+			pointService.point_reg(vo);
+		}else {
+			String f = "GM"+d;
+			vo.setPoint_id(f);
+			pointService.point_reg(vo);
+		}
+		
+		
+		
+		
 		
 		
 		
