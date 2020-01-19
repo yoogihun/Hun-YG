@@ -13,6 +13,7 @@
     
 </head>
 <body>
+	
 	<div id="map" style="width:800px;height:500px;"></div>
     <p><em>지도를 클릭해주세요!</em></p>
     <p id="result">test</p>
@@ -21,6 +22,7 @@
     
     <script>
     	
+    
 	    var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
 		var options = { //지도를 생성할 때 필요한 기본 옵션
 			center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
@@ -34,61 +36,66 @@
 		
 		map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOLEFT);		
 		
+		var list_lat = new Array();
+	    var list_lng = new Array();
+	    
+	    <c:forEach items="${poi }" var="poi">
+	            list_lat.push("${poi.point_lat }");
+	            list_lng.push("${poi.point_lng }");
+	    </c:forEach>
+	     
+		//마커 표시할 위치 지정 및 마커 생성
 		
+		for(var i=0; i<list_lat.length;i++){
+			var marker = new kakao.maps.Marker({
+			    map: map,
+				position: new kakao.maps.LatLng(list_lat[i],list_lng[i])
+			});
+			marker.setClickable(true);
+			console.log(i)
+			marker.setMap(map);
+			marker.setDraggable(true);
+			
+			var	iwRemoveable = true;
+			var infowindow = new kakao.maps.InfoWindow({
+			    position : new kakao.maps.LatLng(list_lat[i],list_lng[i]), 
+			    content : '위도:'+list_lat[i]+"     "+'<br/>경도:'+list_lng[i],
+			    removable : iwRemoveable
+			});
+			      // 마커 위에 인포윈도우를 표시합니다
+			infowindow.open(map,marker);
+			      kakao.maps.event.addListener(marker, 'click', function() {
+		          // 마커 위에 인포윈도우를 표시합니다
+		          infowindow.open(map,marker);  
+		    });
+		}
 		
-		//마커 표시할 위치 지정
-		var markerPosition  = new kakao.maps.LatLng(${poi.get(0).get("point_lat") },${poi.get(0).get("point_lng") });
-		
-		
-		// 마커를 생성합니다
-		var marker = new kakao.maps.Marker({
-		    position: markerPosition
-		});
 		
 		// 마커가 지도 위에 표시되도록 설정합니다
-		marker.setMap(map);
-		marker.setDraggable(true);
+		
+		
 		
 		kakao.maps.event.addListener(map, 'click', function(mouseEvent){
 	   		
 			// 클릭한 위도, 경도 정보를 가져옵니다 
 		   	    var latlng = mouseEvent.latLng;
-		});
-		
-		
-		
-		var iwContent = '지점명:'+'<input type = "text" id = "point" name="point" placeholder="입력"><br/>위도:'+"${poi.get(0).get("point_lat") }"+'<br/>경도:'+"${poi.get(0).get("point_lng") }",
-    	iwRemoveable = true;
-		iwPosition = new kakao.maps.LatLng(${poi.get(0).get("point_lat") },${poi.get(0).get("point_lng") }); //인포윈도우 표시 위치입니다
-    
-		// 인포윈도우를 생성합니다
-		var infowindow = new kakao.maps.InfoWindow({
-	    position : iwPosition, 
-	    content : iwContent,
-	    removable : iwRemoveable
-		});
-		
-		// 마커에 클릭이벤트를 등록합니다
-   	 	kakao.maps.event.addListener(marker, 'click', function() {
-   	    // 마커 위에 인포윈도우를 표시합니다
-   	  		infowindow.open(map);
-   	 	});
-   	 	
+			
+		   	 var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
+		   	    message += '경도는 ' + latlng.getLng() + ' 입니다';
+		   	 
+		   	    var resultDiv = document.getElementById('result');
+		   	    console.log(resultDiv);
+		   	    resultDiv.innerText = message;
+		});	
+		 
 		
 		</script>
 		
-		
+
 	
-		
-	 
-	
-	
-	
-	
-	
-	
+<!-- 지점 등록 부분 -->	
    <script>
-   var setPopup;
+    var setPopup;
 	var lat;
 	var lng;
 	
@@ -247,20 +254,13 @@
    
 	<input type ="button" onclick="location.href='/board/listAll'" value="게시판이동">
 	
-	
-	<c:forEach items="${poi }" var="poi">
-           	
-            <p>${poi.point_id }</p>
-            <p>${poi.point_lat }</p>
-        	<p>${poi.point_lng }</p>
-    </c:forEach>
-   ${poi.get(0).get("point_lat") }
-   ${poi.get(1).get("point_lat") }
-   
+    
+    
     <input type="button" onclick="popup()" value="팝업">
     <input type="button" onclick="set()" value="전달">
-
-
+	
+	
+	
 
     
 </body>
