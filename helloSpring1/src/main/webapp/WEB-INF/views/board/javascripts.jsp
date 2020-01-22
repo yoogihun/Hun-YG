@@ -35,11 +35,15 @@
 		var mapTypeControl = new kakao.maps.MapTypeControl();
 		
 		map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOLEFT);		
-		
+		var list_name = new Array();
 		var list_lat = new Array();
 	    var list_lng = new Array();
+	    var markers = new Array();
+	    var infowindows = new Array();
+	    var cli = new Array();
 	    
 	    <c:forEach items="${poi }" var="poi">
+	    		list_name.push("${poi.point_name}");
 	            list_lat.push("${poi.point_lat }");
 	            list_lng.push("${poi.point_lng }");
 	    </c:forEach>
@@ -47,35 +51,59 @@
 		//마커 표시할 위치 지정 및 마커 생성
 		
 		for(var i=0; i<list_lat.length;i++){
+			
+			
 			var marker = new kakao.maps.Marker({
 			    map: map,
 				position: new kakao.maps.LatLng(list_lat[i],list_lng[i])
 			});
-			marker.setClickable(true);
-			console.log(i)
+			//marker.setClickable(true);
+			console.log(marker.id);
 			marker.setMap(map);
 			marker.setDraggable(true);
+			markers.push(marker);
+			console.log(markers[i]);
 			
-			var	iwRemoveable = true;
+			
+			
 			var infowindow = new kakao.maps.InfoWindow({
 			    position : new kakao.maps.LatLng(list_lat[i],list_lng[i]), 
-			    content : '위도:'+list_lat[i]+"     "+'<br/>경도:'+list_lng[i],
-			    removable : iwRemoveable
+			    content : '지점명:'+list_name[i]+'<br/>위도:'+list_lat[i]+"     "+'<br/>경도:'+list_lng[i],
+			    removable : true
 			});
-			      // 마커 위에 인포윈도우를 표시합니다
-			infowindow.open(map,marker);
-			      kakao.maps.event.addListener(marker, 'click', function() {
+			infowindows.push(infowindow);
+			
+			console.log(infowindows[i]);
+			
+			// 마커 위에 인포윈도우를 표시합니다
+			//infowindow.open(map,marker);
+			var cl = function(){
+				kakao.maps.event.addListener(markers[0], 'click', function() {
+			          // 마커 위에 인포윈도우를 표시합니다
+			          infowindows[0].open(map,markers[0]);
+			          //배열에 함수를 저장못하나??
+			    });
+			} 
+			cli.push(cl);
+			console.log(cli[i]);
+			
+			kakao.maps.event.addListener(markers[0], 'click', cl());
 		          // 마커 위에 인포윈도우를 표시합니다
-		          infowindow.open(map,marker);  
-		    });
+		          //infowindows[0].open(map,markers[0]);  
+		   
+			  
 		}
 		
+		
+		
+		
+	
 		
 		// 마커가 지도 위에 표시되도록 설정합니다
 		
 		
 		
-		kakao.maps.event.addListener(map, 'click', function(mouseEvent){
+		 kakao.maps.event.addListener(map, 'click', function(mouseEvent){
 	   		
 			// 클릭한 위도, 경도 정보를 가져옵니다 
 		   	    var latlng = mouseEvent.latLng;
@@ -86,7 +114,7 @@
 		   	    var resultDiv = document.getElementById('result');
 		   	    console.log(resultDiv);
 		   	    resultDiv.innerText = message;
-		});	
+		});	 
 		 
 		
 		</script>
@@ -173,6 +201,7 @@
    	    // 마커 위에 인포윈도우를 표시합니다
    	  	infowindow.open(map, marker);
    	 	});
+   	    
 		});
 		
 	}
