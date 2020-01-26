@@ -38,9 +38,8 @@
 		var list_name = new Array();
 		var list_lat = new Array();
 	    var list_lng = new Array();
-	    var markers = new Array();
-	    var infowindows = new Array();
-	    var cli = new Array();
+	   
+	    
 	    
 	    <c:forEach items="${poi }" var="poi">
 	    		list_name.push("${poi.point_name}");
@@ -52,47 +51,42 @@
 		
 		for(var i=0; i<list_lat.length;i++){
 			
-			
+			//마커를 생성한다
 			var marker = new kakao.maps.Marker({
 			    map: map,
 				position: new kakao.maps.LatLng(list_lat[i],list_lng[i])
 			});
 			//marker.setClickable(true);
 			console.log(marker.id);
-			marker.setMap(map);
+			
+			//마커 움직이기
 			marker.setDraggable(true);
-			markers.push(marker);
-			console.log(markers[i]);
 			
 			
 			
+			
+			//인포윈도우를 생성한다
 			var infowindow = new kakao.maps.InfoWindow({
 			    position : new kakao.maps.LatLng(list_lat[i],list_lng[i]), 
 			    content : '지점명:'+list_name[i]+'<br/>위도:'+list_lat[i]+"     "+'<br/>경도:'+list_lng[i],
 			    removable : true
 			});
-			infowindows.push(infowindow);
 			
-			console.log(infowindows[i]);
 			
-			// 마커 위에 인포윈도우를 표시합니다
-			//infowindow.open(map,marker);
-			var cl = function(){
-				kakao.maps.event.addListener(markers[0], 'click', function() {
-			          // 마커 위에 인포윈도우를 표시합니다
-			          infowindows[0].open(map,markers[0]);
-			          //배열에 함수를 저장못하나??
-			    });
-			} 
-			cli.push(cl);
-			console.log(cli[i]);
 			
-			kakao.maps.event.addListener(markers[0], 'click', cl());
-		          // 마커 위에 인포윈도우를 표시합니다
-		          //infowindows[0].open(map,markers[0]);  
-		   
+			kakao.maps.event.addListener(marker, 'click', makeOverListener(map, marker,infowindow));
+		    
+			//kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
 			  
 		}
+		
+		function makeOverListener(map, marker,infowindow) {
+		    return function() {
+		        infowindow.open(map, marker);
+		    };
+		}
+		
+		
 		
 		
 		
