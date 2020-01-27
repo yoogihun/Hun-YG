@@ -14,6 +14,8 @@
 </head>
 <body>
 	
+	
+	
 	<div id="map" style="width:800px;height:500px;"></div>
     <p><em>지도를 클릭해주세요!</em></p>
     <p id="result">test</p>
@@ -35,32 +37,42 @@
 		var mapTypeControl = new kakao.maps.MapTypeControl();
 		
 		map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOLEFT);		
+		var list_id = new Array();
 		var list_name = new Array();
 		var list_lat = new Array();
 	    var list_lng = new Array();
-	   
+	    //전역변수로 마커 사용
+	    var marker;
+	    
 	    
 	    
 	    <c:forEach items="${poi }" var="poi">
+	    		list_id.push("${poi.point_id}");
 	    		list_name.push("${poi.point_name}");
 	            list_lat.push("${poi.point_lat }");
 	            list_lng.push("${poi.point_lng }");
 	    </c:forEach>
+	    
+	    
 	     
 		//마커 표시할 위치 지정 및 마커 생성
 		
 		for(var i=0; i<list_lat.length;i++){
 			
 			//마커를 생성한다
-			var marker = new kakao.maps.Marker({
-			    map: map,
+			marker = new kakao.maps.Marker({
+				map: map,
 				position: new kakao.maps.LatLng(list_lat[i],list_lng[i])
 			});
 			//marker.setClickable(true);
-			console.log(marker.id);
+			//saveId.push(marker.pd.id);
+			//console.log(saveId[i]);
+			//"daum.maps.Marker.Area:1"
+			
 			
 			//마커 움직이기
-			marker.setDraggable(true);
+			var dragable = false;
+			marker.setDraggable(dragable);
 			
 			
 			
@@ -68,35 +80,52 @@
 			//인포윈도우를 생성한다
 			var infowindow = new kakao.maps.InfoWindow({
 			    position : new kakao.maps.LatLng(list_lat[i],list_lng[i]), 
-			    content : '지점명:'+list_name[i]+'<br/>위도:'+list_lat[i]+"     "+'<br/>경도:'+list_lng[i],
+			    content : "=============="+'<br/>지점아이디:'+list_id[i]+""+'<br/>지점명:'+list_name[i]+'<br/>위도:'+list_lat[i]+'<br/>경도:'+list_lng[i]+'<br/><input type="button" id="bbtn" name="bbtn" value="위치수정" onclick="modify()">',
 			    removable : true
 			});
-			
-			
-			
-			kakao.maps.event.addListener(marker, 'click', makeOverListener(map, marker,infowindow));
+			//실행되면서 각 마커에 이벤트를 등록해준다.
+			kakao.maps.event.addListener(marker, 'click', infow(map, marker,infowindow));
 		    
 			//kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
-			  
-		}
+	//반복문 종료		  
+	}
+		var thisMarker;
 		
-		function makeOverListener(map, marker,infowindow) {
-		    return function() {
+		//인포윈도우를 여는 함수이다. 인자 값으로 infowindow를 받는다.
+		function infow(map, marker,infowindow) {
+			//인포윈도우를 연다. 열어주면서 해당 마커를 saveId에 저장해준다.
+		    //리턴 펑션으로 하지 않으면 모든 인포윈도우가 열려버림 왜냐하면, 클릭 시, 리턴이 인포윈도우 오픈인데, 리턴이 사라지니까 이벤트 등록될때마다 실행되어버림
+			return function() {
 		        infowindow.open(map, marker);
+		        thisMarker = marker;
 		    };
 		}
 		
 		
-		
-		
+		//마커 위치 수정
+		function modify(){
+			alert("이동할 위치를 누르세요")
+			
+			// 지도를 클릭한 위치에 표출할 마커입니다
+			console.log(thisMarker);
+			console.log(marker);
+			
+			//마커를 사용자가 선택한 마커로 설정해준다. saveId 값은 인포윈도우를 열어줄때, 그 해당마커를 saveId에 세팅해주고 여기서 사용한다.
+			marker = thisMarker;
+
+			// 지도에 마커를 표시합니다
+			marker.setMap(map);
+			kakao.maps.event.addListener(map, 'click', function(mouseEvent) {	    
+			    
+			    var latlng = mouseEvent.latLng;
+			 // 마커 위치를 클릭한 위치로 옮깁니다
+			    marker.setPosition(latlng);
+		})
+	}
 		
 		
 	
-		
-		// 마커가 지도 위에 표시되도록 설정합니다
-		
-		
-		
+			
 		 kakao.maps.event.addListener(map, 'click', function(mouseEvent){
 	   		
 			// 클릭한 위도, 경도 정보를 가져옵니다 
@@ -109,10 +138,11 @@
 		   	    console.log(resultDiv);
 		   	    resultDiv.innerText = message;
 		});	 
-		 
-		
+
 		</script>
 		
+		
+
 
 	
 <!-- 지점 등록 부분 -->	
@@ -226,43 +256,6 @@
     </script>
     
     
-    <script>
-	    function getInfo() {
-	    // 지도의 현재 중심좌표를 얻어옵니다 
-	    var center = map.getCenter(); 
-	    
-	    // 지도의 현재 레벨을 얻어옵니다
-	    var level = map.getLevel();
-	    
-	    // 지도타입을 얻어옵니다
-	    var mapTypeId = map.getMapTypeId(); 
-	    
-	    // 지도의 현재 영역을 얻어옵니다 
-	    var bounds = map.getBounds();
-	    
-	    // 영역의 남서쪽 좌표를 얻어옵니다 
-	    var swLatLng = bounds.getSouthWest(); 
-	    
-	    // 영역의 북동쪽 좌표를 얻어옵니다 
-	    var neLatLng = bounds.getNorthEast(); 
-	    
-	    // 영역정보를 문자열로 얻어옵니다. ((남,서), (북,동)) 형식입니다
-	    var boundsStr = bounds.toString();
-	    
-	    
-	    var message = '지도 중심좌표는 위도 ' + center.getLat() + ', <br>';
-	    message += '경도 ' + center.getLng() + ' 이고 <br>';
-	    message += '지도 레벨은 ' + level + ' 입니다 <br> <br>';
-	    message += '지도 타입은 ' + mapTypeId + ' 이고 <br> ';
-	    message += '지도의 남서쪽 좌표는 ' + swLatLng.getLat() + ', ' + swLatLng.getLng() + ' 이고 <br>';
-	    message += '북동쪽 좌표는 ' + neLatLng.getLat() + ', ' + neLatLng.getLng() + ' 입니다';
-	    console.log(message);
-   
-		}
-    </script>
-    
-    
-    
     
     <input type ="button" id="reg" name="reg" value="마커생성">
      <script>
@@ -282,9 +275,31 @@
     <input type="button" onclick="popup()" value="팝업">
     <input type="button" onclick="set()" value="전달">
 	
+	<div>
+		<table class="table table-board" border="1px" width="80%" align="center">
+	        <tr>
+	        	<th style="width:10%">지점아이디</th>
+	            <th style="width:20%" >지점명</th>         
+	            <th style="width:10%">위도</th>
+	            <th style="width:10%">경도</th>
+	        </tr>
+	        
+	     <c:forEach items="${poi }" var="po">   
+	        <tr>
+	        	<td>${po.point_id }</td>
+	        	<td>${po.point_name}</td>
+	        	<td>${po.point_lat}</td>
+	        	<td>${po.point_lng}</td>
+	        </tr>
+		</c:forEach>
+	</div>
+	<script>
+		function test(x,y,z){
+			return x+y+z
+		}
+		console.log(test(1,1,1));
+	</script>
 	
-	
-
     
 </body>
 </html>
