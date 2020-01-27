@@ -98,21 +98,19 @@
 			return function() {
 		        infowindow.open(map, marker);
 		        thisMarker = marker;
+		        //인포윈도우 열때 지점아이디도 세팅하는방법????
 		    };
 		}
 		
 		
 		//마커 위치 수정
+		var modifiyPopup;
 		function modify(){
 			alert("이동할 위치를 누르세요")
 			
-			// 지도를 클릭한 위치에 표출할 마커입니다
-			console.log(thisMarker);
-			console.log(marker);
-			
 			//마커를 사용자가 선택한 마커로 설정해준다. saveId 값은 인포윈도우를 열어줄때, 그 해당마커를 saveId에 세팅해주고 여기서 사용한다.
 			marker = thisMarker;
-
+			console.log(marker);
 			// 지도에 마커를 표시합니다
 			marker.setMap(map);
 			kakao.maps.event.addListener(map, 'click', function(mouseEvent) {	    
@@ -120,7 +118,15 @@
 			    var latlng = mouseEvent.latLng;
 			 // 마커 위치를 클릭한 위치로 옮깁니다
 			    marker.setPosition(latlng);
+			 	var lat = latlng.getLat();	
+			 	var lng = latlng.getLng();
+			 	alert(lat)
+			 	alert(lng)
+			 	
 		})
+		
+		
+	//수정 함수 종료
 	}
 		
 		
@@ -299,6 +305,7 @@
 		}
 		console.log(test(1,1,1));
 	</script>
+	
 	
     
 </body>
