@@ -8,20 +8,19 @@
 </head>
 <body>
 <script>
-opener.location.href = "javascript:set();";
+opener.location.href = "javascript:modset();";
 
-function sub(){
-	var form_1 = document.point_reg;
-	form_1.submit();
+function modsub(){
+	var point_modify = document.point_mod;
+	point_modify.submit();
 	close();
 }
+
 </script>
-
-
-		<form name="point_reg" method="POST">
-			<label>지점아이디</label>
-			<input type="text" id="point_id" name="point_id">			
-				<br/>
+	
+		<form name="point_mod" method="POST">
+		
+			<input type="text" id="point_id" name="point_id" readonly="readonly">
 			<label>지점명 :</label>
 			<input type="text" id="point_name" name="point_name">
 				<br/>
@@ -31,10 +30,11 @@ function sub(){
 			<label>경도:</label>
 			<input type="text" id="point_lng" name="point_lng" >
 				<br/>
-			<input type="button" value="만들기" onclick="sub()">
+			<input type="button" onclick="modsub()"  value="만들기">
 		</form>
 	
-		
+	
+	
 	
 		
 	

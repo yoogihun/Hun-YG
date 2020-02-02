@@ -290,10 +290,12 @@ public class BoardController {
 		
 		List<Map<String,Object>> list = test;
 		
-		System.out.println(list); 
+		System.out.println(list.get(list.size() -1));
+		
+		
 		
 		model.addAttribute("poi", list);
-		
+		model.addAttribute("maxpoi",list.get(list.size() -1));
 	}
 	
 	@RequestMapping(value = "/javascripts", method = RequestMethod.POST)
@@ -314,31 +316,38 @@ public class BoardController {
 	public void reg_popup_post(PointVO vo, Model model, HttpSession session) throws Exception {
 		System.out.println("포스트팝업");
 		Map<String,Object> map = pointService.point_max_id(vo);
-		String a = (String) map.get("point_id");
 		
-		// b는 a의 숫자 부분만 잘라온다.
-		String b = a.substring(2);
-		// c 는 문자열 b를 숫자로 변환해준다.
-		int c = Integer.parseInt(b)+1;
-		// 숫자 c를 문자열 d로 변환시켜준다.
-		String d = Integer.toString(c);
-		// 문자열 d의 길이를 e에 저장한다.
-		int e = d.length();
+		String Id = (String) map.get("point_id");
 		
-		// d의 길이가 8보다 작을경우, 문자열 0을 7-e 만큼 반복하고, GM을 붙여 10자리로 만들어 point_id를 세팅해준다.
-		if(e<8) {
-			for(int i = 0; i<=7-e; i++) {
-				d = "0"+d;
-			}
-			String f = "GM"+d;
-			vo.setPoint_id(f);
-			pointService.point_reg(vo);
-		}else {
-			String f = "GM"+d;
-			vo.setPoint_id(f);
-			pointService.point_reg(vo);
+		String point_front = Id.substring(0,Id.length()-1);
+		
+		String point_number = Id.substring(Id.length()-1);
+		
+		int point_number_2 = Integer.parseInt(point_number);
+		
+		point_number_2 = point_number_2+1;
+		
+		String point_ID = point_front + point_number_2;
+		
+		
+		
+		//System.out.println("라스트"+last);
+		vo.setPoint_id(point_ID);	
+		pointService.point_reg(vo);
+		
+	}
+	
+		@RequestMapping(value = "/point_mod_Popup", method = RequestMethod.GET)
+		public void mod_popup_get(PointVO vo, Model model, HttpSession session) throws Exception {
+			System.out.println("겟팝업");
+			
+			
 		}
 		
+		@RequestMapping(value = "/point_mod_Popup", method = RequestMethod.POST)
+		public void mod_popup_post(PointVO vo, Model model, HttpSession session) throws Exception {
+			System.out.println("포스트팝업");
+			pointService.point_mod(vo);
 		
 		
 		

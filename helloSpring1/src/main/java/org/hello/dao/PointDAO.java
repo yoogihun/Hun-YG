@@ -12,4 +12,7 @@ public interface PointDAO {
 	public void point_reg(PointVO vo) throws Exception;
 	
 	Map<String,Object> point_max_id(PointVO vo) throws Exception;
+
+	public void point_mod(PointVO vo) throws Exception;
+
 }

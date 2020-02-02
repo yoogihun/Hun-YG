@@ -33,4 +33,9 @@ public class PointDAOImpl implements PointDAO {
 	public Map<String,Object> point_max_id(PointVO vo) throws Exception{
 		return sqlSession.selectOne(namespace + ".point_id_select", vo);
 	}
+	
+	@Override
+	public void point_mod(PointVO vo) throws Exception{
+		sqlSession.update(namespace + ".point_modify", vo);
+	}
 }

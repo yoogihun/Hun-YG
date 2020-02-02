@@ -23,11 +23,20 @@
 	
 	</insert>
 	
-	
+	<!-- 마지막 지점아이디 조회 -->
 	<select id ="point_id_select" resultType="java.util.Map">
 		select max(point_id) as point_id
-		from bbs.marker_lat_lng;
+		from bbs.marker_lat_lng
+		use index(point_id);
 	</select>
 	
-	
+	<!-- 위치 수정 -->
+	<update id="point_modify">
+		update bbs.marker_lat_lng 
+			set 
+				point_name=#{point_name},
+				point_lat=#{point_lat},
+				point_lng=#{point_lng}
+			where point_id = #{point_id}
+	</update>
 </mapper>

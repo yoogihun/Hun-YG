@@ -41,9 +41,21 @@
 		var list_name = new Array();
 		var list_lat = new Array();
 	    var list_lng = new Array();
+	    var list_maxid = new Array();
 	    //전역변수로 마커 사용
 	    var marker;
-	    
+	    var modPopup;
+		var lat;
+		var lng;
+		
+		
+		function modify_popup(){
+			
+	        var url = "/board/point_mod_Popup";
+	        var name = "point_modify_popup";
+	        var option = "width = 700px, height = 500px, top = 100, left = 200, location = no"
+	        modPopup = window.open(url, name, option);
+		}
 	    
 	    
 	    <c:forEach items="${poi }" var="poi">
@@ -53,7 +65,11 @@
 	            list_lng.push("${poi.point_lng }");
 	    </c:forEach>
 	    
+	    list_maxid.push("${maxpoi.point_id}");
 	    
+	    
+	    
+		console.log(list_maxid[0]);
 	     
 		//마커 표시할 위치 지정 및 마커 생성
 		
@@ -83,6 +99,7 @@
 			    content : "=============="+'<br/>지점아이디:'+list_id[i]+""+'<br/>지점명:'+list_name[i]+'<br/>위도:'+list_lat[i]+'<br/>경도:'+list_lng[i]+'<br/><input type="button" id="bbtn" name="bbtn" value="위치수정" onclick="modify()">',
 			    removable : true
 			});
+			console.log(infowindow.GMid)
 			//실행되면서 각 마커에 이벤트를 등록해준다.
 			kakao.maps.event.addListener(marker, 'click', infow(map, marker,infowindow));
 		    
@@ -90,14 +107,18 @@
 	//반복문 종료		  
 	}
 		var thisMarker;
-		
+		var thisInfo;
+		var thisId;
 		//인포윈도우를 여는 함수이다. 인자 값으로 infowindow를 받는다.
 		function infow(map, marker,infowindow) {
-			//인포윈도우를 연다. 열어주면서 해당 마커를 saveId에 저장해준다.
+			
 		    //리턴 펑션으로 하지 않으면 모든 인포윈도우가 열려버림 왜냐하면, 클릭 시, 리턴이 인포윈도우 오픈인데, 리턴이 사라지니까 이벤트 등록될때마다 실행되어버림
 			return function() {
 		        infowindow.open(map, marker);
 		        thisMarker = marker;
+		        thisInfo = infowindow;
+		        thisId = marker.pd.id;
+		        
 		        //인포윈도우 열때 지점아이디도 세팅하는방법????
 		    };
 		}
@@ -105,12 +126,16 @@
 		
 		//마커 위치 수정
 		var modifiyPopup;
+		var mod_lat;
+		var mod_lng;
 		function modify(){
 			alert("이동할 위치를 누르세요")
 			
 			//마커를 사용자가 선택한 마커로 설정해준다. saveId 값은 인포윈도우를 열어줄때, 그 해당마커를 saveId에 세팅해주고 여기서 사용한다.
 			marker = thisMarker;
+			Infowindow = thisInfo;
 			console.log(marker);
+			console.log(Infowindow);
 			// 지도에 마커를 표시합니다
 			marker.setMap(map);
 			kakao.maps.event.addListener(map, 'click', function(mouseEvent) {	    
@@ -118,12 +143,15 @@
 			    var latlng = mouseEvent.latLng;
 			 // 마커 위치를 클릭한 위치로 옮깁니다
 			    marker.setPosition(latlng);
-			 	var lat = latlng.getLat();	
-			 	var lng = latlng.getLng();
-			 	alert(lat)
-			 	alert(lng)
+			 	mod_lat = latlng.getLat();	
+			 	mod_lng = latlng.getLng();
+			 	mod_id = thisId;
+			 	console.log(lat)
+			 	console.log(lng)
+			 	modify_popup();
 			 	
 		})
+		
 		
 		
 	//수정 함수 종료
@@ -154,6 +182,7 @@
 <!-- 지점 등록 부분 -->	
    <script>
     var setPopup;
+    var markerId;
 	var lat;
 	var lng;
 	
@@ -206,6 +235,7 @@
 		    position : iwPosition, 
 		    content : iwContent,
 		    removable : iwRemoveable
+		    
 			});
 			console.log(lat+"hhh");
 			console.log(lng+"gg")
@@ -235,11 +265,20 @@
 		});
 		
 	}
+   
     
     function set(){
+    	setPopup.document.getElementById("point_id").value = list_maxid[0];
 		setPopup.document.getElementById("point_lat").value = lat;
-	    setPopup.document.getElementById("point_lng").value = lng;	
+	    setPopup.document.getElementById("point_lng").value = lng;
+	    
 			
+	}
+    
+    function modset(){
+    	modPopup.document.getElementById("point_lat").value = mod_lat;
+    	modPopup.document.getElementById("point_lng").value = mod_lng;
+    	modPopup.document.getElementById("point_id").value = thisId;
 	}
     </script>
    
@@ -278,8 +317,8 @@
 	
     
     
-    <input type="button" onclick="popup()" value="팝업">
-    <input type="button" onclick="set()" value="전달">
+    <!-- <input type="button" onclick="popup()" value="팝업">
+    <input type="button" onclick="set()" value="전달"> -->
 	
 	<div>
 		<table class="table table-board" border="1px" width="80%" align="center">
@@ -299,12 +338,7 @@
 	        </tr>
 		</c:forEach>
 	</div>
-	<script>
-		function test(x,y,z){
-			return x+y+z
-		}
-		console.log(test(1,1,1));
-	</script>
+	
 	
 	
     

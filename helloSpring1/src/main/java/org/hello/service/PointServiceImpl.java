@@ -28,4 +28,9 @@ public class PointServiceImpl implements PointService {
 	public Map<String,Object> point_max_id(PointVO vo) throws Exception{
 		return dao.point_max_id(vo);
 	}
+	
+	@Override
+	public void point_mod(PointVO vo) throws Exception{
+		dao.point_mod(vo);
+	}
 }
