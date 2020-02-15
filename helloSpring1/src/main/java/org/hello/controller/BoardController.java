@@ -316,24 +316,40 @@ public class BoardController {
 	public void reg_popup_post(PointVO vo, Model model, HttpSession session) throws Exception {
 		System.out.println("포스트팝업");
 		Map<String,Object> map = pointService.point_max_id(vo);
-		
 		String Id = (String) map.get("point_id");
+		System.out.println(Id);
 		
-		String point_front = Id.substring(0,Id.length()-1);
-		
-		String point_number = Id.substring(Id.length()-1);
-		
+		String point_front = Id.substring(0,Id.length()-3);
+		System.out.println(point_front);
+		String point_number = Id.substring(Id.length()-3);
+		System.out.println(point_number);
 		int point_number_2 = Integer.parseInt(point_number);
-		
 		point_number_2 = point_number_2+1;
+		String point_number_2_1 = Integer.toString(point_number_2);
+		int len = point_number_2_1.length();
+		System.out.println(len+"길이");
+		if(len == 1) {
+			String point_ID = point_front +"00"+ point_number_2;
+			vo.setPoint_id(point_ID);	
+			pointService.point_reg(vo);
+			
+		}else if(len == 2){
+			String point_ID = point_front +"0"+ point_number_2;
+			vo.setPoint_id(point_ID);	
+			pointService.point_reg(vo);
+		}else {
+			String point_ID = point_front + point_number_2;
+			vo.setPoint_id(point_ID);	
+			pointService.point_reg(vo);
+		}
 		
-		String point_ID = point_front + point_number_2;
 		
 		
 		
-		//System.out.println("라스트"+last);
-		vo.setPoint_id(point_ID);	
-		pointService.point_reg(vo);
+		
+		
+		
+	
 		
 	}
 	
