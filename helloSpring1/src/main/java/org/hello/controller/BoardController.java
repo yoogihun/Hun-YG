@@ -342,15 +342,7 @@ public class BoardController {
 			vo.setPoint_id(point_ID);	
 			pointService.point_reg(vo);
 		}
-		
-		
-		
-		
-		
-		
-		
-	
-		
+			
 	}
 	
 		@RequestMapping(value = "/point_mod_Popup", method = RequestMethod.GET)
@@ -363,7 +355,19 @@ public class BoardController {
 		@RequestMapping(value = "/point_mod_Popup", method = RequestMethod.POST)
 		public void mod_popup_post(PointVO vo, Model model, HttpSession session) throws Exception {
 			System.out.println("Æ÷½ºÆ®ÆË¾÷");
-			pointService.point_mod(vo);
+			System.out.println(vo.getPoint_id());
+			String point_id = vo.getPoint_id();
+			String point_id_front = point_id.substring(0,point_id.length()-1);
+			String point_id_end = point_id.substring(point_id.length()-1);
+			int len = point_id_end.length();
+			if(len == 1) {
+				point_id = point_id_front+"00"+point_id_end;
+				vo.setPoint_id(point_id);
+				pointService.point_mod(vo);
+			}
+			
+			
+			
 		
 		
 		
@@ -372,4 +376,10 @@ public class BoardController {
 		
 	}
 	
+		@RequestMapping(value = "/roadview", method = RequestMethod.GET)
+		public void roa_get(PointVO vo, Model model, HttpSession session) throws Exception {
+			System.out.println("°ÙÆË¾÷");
+				
+				
+		}
 }

@@ -26,8 +26,7 @@
 	<!-- 마지막 지점아이디 조회 -->
 	<select id ="point_id_select" resultType="java.util.Map">
 		select max(point_id) as point_id
-		from bbs.marker_lat_lng
-		use index(point_id);
+		from bbs.marker_lat_lng;
 	</select>
 	
 	<!-- 위치 수정 -->

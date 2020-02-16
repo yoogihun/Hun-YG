@@ -4,13 +4,10 @@
 <%@ page session="false" %>
 <html>
 <head>
+<script src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
 	<title>카카오지도</title>
     <p>지도는 아래다</p>
-    
-    
 
-    
-    
 </head>
 <body>
 	
@@ -24,19 +21,74 @@
     
     <script>
     	
+	    var overlayOn = false, // 지도 위에 로드뷰 오버레이가 추가된 상태를 가지고 있을 변수
+	    container = document.getElementById('container'), // 지도와 로드뷰를 감싸고 있는 div 입니다
+	    mapWrapper = document.getElementById('mapWrapper'), // 지도를 감싸고 있는 div 입니다
+	    mapContainer = document.getElementById('map'), // 지도를 표시할 div 입니다 
+	    rvContainer = document.getElementById('roadview'); //로드뷰를 표시할 div 입니다
+	
+		var mapCenter = new kakao.maps.LatLng(33.45042 , 126.57091), // 지도의 중심좌표
+		    mapOption = {
+		        center: mapCenter, // 지도의 중심좌표
+		        level: 3 // 지도의 확대 레벨
+		    };
+	
+		// 지도를 표시할 div와 지도 옵션으로 지도를 생성합니다
+		var map = new kakao.maps.Map(mapContainer, mapOption);	
     
-	    var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+    
+		
+		
+		
+	    /* var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
 		var options = { //지도를 생성할 때 필요한 기본 옵션
 			center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
 			level: 3 //지도의 레벨(확대, 축소 정도)
-	    };
+	    }; */
     	
-		var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+		//var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
     	
 		// 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
 		var mapTypeControl = new kakao.maps.MapTypeControl();
 		
 		map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOLEFT);		
+		map.addOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
+		
+		
+		/*  //도형 표시
+		var path = [
+			new kakao.maps.LatLng(33.45086654081833, 126.56906858718982),
+			new kakao.maps.LatLng(33.45010890948828, 126.56898629127468),
+			new kakao.maps.LatLng(33.44979857909499, 126.57049357211622),
+			new kakao.maps.LatLng(33.450137483918496, 126.57202991943016),
+			new kakao.maps.LatLng(33.450706188506054, 126.57223147947938),
+			new kakao.maps.LatLng(33.45164068091554, 126.5713126693152)
+		];
+
+		var hole = [
+			new kakao.maps.LatLng(33.4506262491095, 126.56997323165163),
+			new kakao.maps.LatLng(33.45029422800042, 126.57042659659218),
+			new kakao.maps.LatLng(33.45032339792896, 126.5710395101452),
+			new kakao.maps.LatLng(33.450622037218295, 126.57136070280123),
+			new kakao.maps.LatLng(33.450964416902046, 126.57129448564594),
+			new kakao.maps.LatLng(33.4510527150534, 126.57075627706975)
+		];
+
+		// 다각형을 생성하고 지도에 표시합니다
+		var polygon = new kakao.maps.Polygon({
+			map: map,
+		    path: [path, hole], // 좌표 배열의 배열로 하나의 다각형을 표시할 수 있습니다
+		    strokeWeight: 2,
+		    strokeColor: '#b26bb2',
+		    strokeOpacity: 0.8,
+		    fillColor: '#f9f',
+		    fillOpacity: 0.7 
+		}); */
+		 
+		
+		
+		
+		
 		var list_id = new Array();
 		var list_name = new Array();
 		var list_lat = new Array();
@@ -174,8 +226,6 @@
 		});	 
 
 		</script>
-		
-		
 
 
 	
@@ -285,7 +335,7 @@
    <script>
    	function mvcenter(){
    		// 이동할 위도 경도 위치를 생성합니다 
-    	var moveLatLon = new kakao.maps.LatLng(33.452613, 126.570888);
+    	var moveLatLon = new kakao.maps.LatLng(37.65231904641515, 127.02154217179361);
     	// 지도 중심을 이동 시킵니다
     	map.setCenter(moveLatLon);
    	}
@@ -339,9 +389,7 @@
 		</c:forEach>
 	</div>
 	
-	
-	
-    
-</body>
+	<input type="button" onclick="location.href='/board/roadview'" value="로드뷰">
+	</body>
 </html>
 
