@@ -1,15 +1,19 @@
 package org.hello.controller;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.hello.domain.BoardVO;
 import org.hello.domain.Criteria;
+import org.hello.domain.ImgVO;
 import org.hello.domain.PageMaker;
 import org.hello.domain.PointVO;
 import org.hello.domain.ReplyVO;
@@ -19,18 +23,21 @@ import org.hello.service.ReplyService;
 import org.member.memberVO.MemberVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kubg.utils.UploadFileUtils;
+
 @Controller
-@RequestMapping("/board") // url¿äÃ»ÀÌ /board/·Î ½ÃÀÛÇÏ´Â °ÍÀº ¿©±â¼­ Ã³¸®ÇÑ´Ù. ex) board/abc , board/123 board/create
+@RequestMapping("/board") // urlï¿½ï¿½Ã»ï¿½ï¿½ /board/ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½â¼­ Ã³ï¿½ï¿½ï¿½Ñ´ï¿½. ex) board/abc , board/123 board/create
 public class BoardController {
-	
-	
-	
-	
+
 	@Inject
 	private BoardService service;
 	
@@ -40,14 +47,21 @@ public class BoardController {
 	@Inject
 	private PointService pointService;
 	
+	@Resource(name="uploadPath")
+	private String uploadPath;
 	
+	@RequestMapping(value="/",method=RequestMethod.GET) 
+	  public String defaul(ModelAndView mav) throws Exception{
+		mav.setViewName("/board/listAll");
+	  	  
+		return "redirect:/board/listAll";
+	  
+	  }
+		
 	@RequestMapping(value="/create",method=RequestMethod.GET) 
 	  public void createGET(BoardVO board, MemberVO vo, Model model,HttpServletRequest req,HttpSession session) throws Exception{
-		  System.out.println("/board/create ÀÔ´Ï´Ù. GET¹æ½Ä");
-	  	  
-		  
-		  
-		  
+		  System.out.println("/board/create ï¿½Ô´Ï´ï¿½. GETï¿½ï¿½ï¿½");
+
 	  	  Object loginInfo = session.getAttribute("member");
 	  	  
 	  		if(loginInfo == null) 
@@ -63,13 +77,13 @@ public class BoardController {
 	 
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String createPOST(BoardVO board, MemberVO vo, HttpServletRequest req, RedirectAttributes rttr,Model model,HttpSession session) throws Exception {
-		System.out.println("/board/create ÀÔ´Ï´Ù. POST ¹æ½Ä" );	
+	public void createPOST(BoardVO board, MemberVO vo, HttpServletRequest req, RedirectAttributes rttr,Model model,HttpSession session) throws Exception {
+		System.out.println("/board/create ï¿½Ô´Ï´ï¿½. POST ï¿½ï¿½ï¿½" );	
 		service.create(board);
 		
-		rttr.addFlashAttribute("msg", "¼º°ø");
+		rttr.addFlashAttribute("msg", "ï¿½ï¿½ï¿½ï¿½");
 		
-		return "redirect:/board/listAll?page=1";
+		//return "redirect:/board/ImgUpload";
 	}
 
 	
@@ -77,7 +91,7 @@ public class BoardController {
 	public void listAll(Criteria cri, BoardVO board, Model model,HttpSession session) throws Exception {
 		
 		
-		System.out.println("ÀüÃ¼¸ñ·Ï ÆäÀÌÁö °Ù");
+		System.out.println("ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½");
 		cri.setPerPageNum(10);
 		
 		int test = service.listCnt();
@@ -92,7 +106,7 @@ public class BoardController {
 	    pageMaker.setCri(cri);
 	    pageMaker.setTotalCount(test);
 	    
-	    System.out.println(list+"ÀüÃ¼¸®½ºÆ®");
+	    System.out.println(list+"ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½Æ®");
 
         
               
@@ -103,7 +117,7 @@ public class BoardController {
 	
 	@RequestMapping(value = "/listAll", method = RequestMethod.POST)
 	public void listAllpost(@RequestParam("perPageNum") Integer perPageNum, Criteria cri, BoardVO board, Model model,HttpSession session) throws Exception {
-		System.out.println("ÀüÃ¼¸ñ·Ï ÆäÀÌÁö Æ÷½ºÆ®");
+		System.out.println("ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®");
 		System.out.println("gihun----"+perPageNum);
 		
 		Map<String,Object> paramMap = new HashMap<String,Object>();
@@ -129,7 +143,7 @@ public class BoardController {
 
 	@RequestMapping(value = "/detail", method = RequestMethod.GET)
 	public void readget(ReplyVO vo,@RequestParam("b_no") Integer b_no, Model model,HttpSession session) throws Exception {
-		System.out.println("»ó¼¼¸ñ·Ï  ÆäÀÌÁö °Ù");
+		System.out.println("ï¿½ó¼¼¸ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½");
 		System.out.println(b_no);
 		List<ReplyVO> replyVO = replyService.readReply(b_no);
 		System.out.println(replyVO);
@@ -151,14 +165,15 @@ public class BoardController {
 			model.addAttribute("member", loginInfo);
 		}	
 		
+		model.addAttribute("ImgVo",service.ImgView());
 	}
 
 	
 	@RequestMapping(value = "/detail", method = RequestMethod.POST)
 	public String readpost(@RequestParam("content") String content,@RequestParam("r_no") Integer r_no, ReplyVO vo,@RequestParam("b_no") Integer b_no, Model model,HttpSession session) throws Exception {
-		System.out.println("»ó¼¼¸ñ·Ï  ÆäÀÌÁö Æ÷½ºÆ®");
-		System.out.println("Æ÷½ºÆ® ±Û¹øÈ£"+b_no);
-		System.out.println("Æ÷½ºÆ® ´ñ±Û¹øÈ£"+r_no);
+		System.out.println("ï¿½ó¼¼¸ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®");
+		System.out.println("ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Û¹ï¿½È£"+b_no);
+		System.out.println("ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Û¹ï¿½È£"+r_no);
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("b_no",b_no);
@@ -184,7 +199,7 @@ public class BoardController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
 	public void updateGET(@RequestParam("b_no") Integer b_no, Model model,HttpSession session) throws Exception {
-		System.out.println("¼öÁ¤ÆäÀÌÁö °Ù");
+		System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½");
 		/* BoardVO vo = service.read(b_no); */
 		model.addAttribute(service.read(b_no));
 		Object loginInfo = session.getAttribute("member");
@@ -192,11 +207,13 @@ public class BoardController {
 			model.addAttribute("msg", false);
 		}
 		
+		
+		model.addAttribute("ImgVo",service.ImgView());
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public String updatePOST(BoardVO vo, Model model) throws Exception {
-		System.out.println("¼öÁ¤ÆäÀÌÁö Æ÷½ºÆ®");
+		System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®");
 		//System.out.println(vo.getB_title());
 		service.update(vo);	
 		return "redirect:/board/listAll";
@@ -205,7 +222,7 @@ public class BoardController {
 	
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public void delete(@RequestParam("b_no") Integer b_no,HttpSession session, Model model) throws Exception {
-		System.out.println("»èÁ¦ °Ù");
+		System.out.println("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½");
 		model.addAttribute(service.read(b_no));
 		Object loginInfo = session.getAttribute("member");
 		if(loginInfo == null) {
@@ -215,15 +232,20 @@ public class BoardController {
 	
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public String delete(@RequestParam("b_no") Integer b_no) throws Exception {
-		System.out.println("»èÁ¦ Æ÷½ºÆ®");
+		System.out.println("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®");
 		service.delete(b_no);
 		return "redirect:/board/listAll";
+	}
+	
+	@RequestMapping(value="/angular", method = RequestMethod.GET)
+	public void study() throws Exception{
+		System.out.println("ì ‘ê·¼");
 	}
 	
 	/*
 	 * @RequestMapping(value = "/search", method = RequestMethod.GET) public void
 	 * searchGet(@RequestParam("b_no") Integer b_no, Model model, HttpSession
-	 * session) throws Exception { System.out.println("°Ù ¼­Ä¡");
+	 * session) throws Exception { System.out.println("ï¿½ï¿½ ï¿½ï¿½Ä¡");
 	 * 
 	 * service.search(b_no);
 	 * 
@@ -235,7 +257,7 @@ public class BoardController {
 	
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
 	public void searchPost(@RequestParam("b_no") Integer b_no, Model model, HttpSession session) throws Exception {
-		System.out.println("Æ÷½ºÆ® ¼­Ä¡");
+		System.out.println("ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Ä¡");
 		
 		model.addAttribute(service.search(b_no));
 		Object loginInfo = session.getAttribute("member");
@@ -247,9 +269,9 @@ public class BoardController {
 	
 	@RequestMapping(value = "/replyupdate", method = RequestMethod.GET)
 	public void replyupdateget(ReplyVO vo, Model model, HttpSession session) throws Exception {
-		System.out.println("°Ù ´ñ±Û¼öÁ¤");
-		//System.out.println("³Ñ°Ü¹ŞÀº ´ñ±ÛÀÇ ±Û¹øÈ£"+b_no);
-		//System.out.println("³Ñ°Ü¹ŞÀº ´ñ±ÛÀÇ ¹øÈ£"+r_no);
+		System.out.println("ï¿½ï¿½ ï¿½ï¿½Û¼ï¿½ï¿½ï¿½");
+		//System.out.println("ï¿½Ñ°Ü¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û¹ï¿½È£"+b_no);
+		//System.out.println("ï¿½Ñ°Ü¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£"+r_no);
 		model.addAttribute("rep", vo);
 		
 		Object loginInfo = session.getAttribute("member");
@@ -263,7 +285,7 @@ public class BoardController {
 	
 	@RequestMapping(value = "/replyupdate", method = RequestMethod.POST)
 	public String replyupdatepost(@RequestParam("r_no") Integer r_no,@RequestParam("b_no") Integer b_no,@RequestParam("content") String content,@RequestParam("writer") String writer,ReplyVO vo, Model model, HttpSession session) throws Exception {
-		System.out.println("Æ÷½ºÆ® ´ñ±Û¼öÁ¤");
+		System.out.println("ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Û¼ï¿½ï¿½ï¿½");
 		System.out.println(b_no);
 		System.out.println(r_no);
 		System.out.println(writer);
@@ -307,14 +329,14 @@ public class BoardController {
 	
 	@RequestMapping(value = "/point_reg_Popup", method = RequestMethod.GET)
 	public void reg_popup_get(PointVO vo, Model model, HttpSession session) throws Exception {
-		System.out.println("°ÙÆË¾÷");
+		System.out.println("ï¿½ï¿½ï¿½Ë¾ï¿½");
 		
 		
 	}
 	
 	@RequestMapping(value = "/point_reg_Popup", method = RequestMethod.POST)
 	public void reg_popup_post(PointVO vo, Model model, HttpSession session) throws Exception {
-		System.out.println("Æ÷½ºÆ®ÆË¾÷");
+		System.out.println("ï¿½ï¿½ï¿½ï¿½Æ®ï¿½Ë¾ï¿½");
 		Map<String,Object> map = pointService.point_max_id(vo);
 		String Id = (String) map.get("point_id");
 		System.out.println(Id);
@@ -327,7 +349,7 @@ public class BoardController {
 		point_number_2 = point_number_2+1;
 		String point_number_2_1 = Integer.toString(point_number_2);
 		int len = point_number_2_1.length();
-		System.out.println(len+"±æÀÌ");
+		System.out.println(len+"ï¿½ï¿½ï¿½ï¿½");
 		if(len == 1) {
 			String point_ID = point_front +"00"+ point_number_2;
 			vo.setPoint_id(point_ID);	
@@ -347,14 +369,14 @@ public class BoardController {
 	
 		@RequestMapping(value = "/point_mod_Popup", method = RequestMethod.GET)
 		public void mod_popup_get(PointVO vo, Model model, HttpSession session) throws Exception {
-			System.out.println("°ÙÆË¾÷");
+			System.out.println("ï¿½ï¿½ï¿½Ë¾ï¿½");
 			
 			
 		}
 		
 		@RequestMapping(value = "/point_mod_Popup", method = RequestMethod.POST)
 		public void mod_popup_post(PointVO vo, Model model, HttpSession session) throws Exception {
-			System.out.println("Æ÷½ºÆ®ÆË¾÷");
+			System.out.println("ï¿½ï¿½ï¿½ï¿½Æ®ï¿½Ë¾ï¿½");
 			System.out.println(vo.getPoint_id());
 			String point_id = vo.getPoint_id();
 			String point_id_front = point_id.substring(0,point_id.length()-1);
@@ -378,8 +400,133 @@ public class BoardController {
 	
 		@RequestMapping(value = "/roadview", method = RequestMethod.GET)
 		public void roa_get(PointVO vo, Model model, HttpSession session) throws Exception {
-			System.out.println("°ÙÆË¾÷");
+			System.out.println("ï¿½ï¿½ï¿½Ë¾ï¿½");
 				
 				
 		}
+
+		@RequestMapping(value = "/ImgUpload", method = RequestMethod.POST)
+		public String upload_post(ImgVO vo,MultipartHttpServletRequest file) throws Exception {
+			System.out.println(file.getFile("file").getOriginalFilename());
+			System.out.println(file.getFile("file"));
+			String imgUploadPath = uploadPath + File.separator + "imgUpload";
+			System.out.println(imgUploadPath);
+			String ymdPath = UploadFileUtils.calcPath(imgUploadPath);
+			String fileName = null;
+
+			if(file.getFile("file") != null) {
+			 fileName = UploadFileUtils.fileUpload(imgUploadPath, file.getFile("file").getOriginalFilename(), file.getFile("file").getBytes(), ymdPath); 
+			} else {
+			 fileName = uploadPath + File.separator + "images" + File.separator + "none.png";
+			}
+			
+			vo.setGdsImg(File.separator + "imgUpload" + ymdPath + File.separator + fileName);
+			vo.setGdsThumbImg(File.separator + "imgUpload" + ymdPath + File.separator + "s" + File.separator + "s_" + fileName);
+			service.register_img(vo);
+			return "redirect:/board/listAll";
+			
+		}
+		
+		@RequestMapping(value = "/modifyImg", method = RequestMethod.POST)
+		public String Img(ImgVO vo,MultipartHttpServletRequest file,HttpServletRequest req) throws Exception {
+			System.out.println(file.getFile("file"));
+			System.out.println(req.getParameter("gdsImg"));
+			// ìƒˆë¡œìš´ íŒŒì¼ì´ ë“±ë¡ë˜ì—ˆëŠ”ì§€ í™•ì¸
+			 if(file.getFile("file").getOriginalFilename() != null && file.getFile("file").getOriginalFilename() != "") {
+			  // ê¸°ì¡´ íŒŒì¼ì„ ì‚­ì œ
+			  new File(uploadPath + req.getParameter("gdsImg")).delete();
+			  new File(uploadPath + req.getParameter("gdsThumbImg")).delete();
+			  
+			  // ìƒˆë¡œ ì²¨ë¶€í•œ íŒŒì¼ì„ ë“±ë¡
+			  String imgUploadPath = uploadPath + File.separator + "imgUpload";
+			  String ymdPath = UploadFileUtils.calcPath(imgUploadPath);
+			  String fileName = UploadFileUtils.fileUpload(imgUploadPath, file.getFile("file").getOriginalFilename(), file.getFile("file").getBytes(), ymdPath);
+			  
+			  vo.setGdsImg(File.separator + "imgUpload" + ymdPath + File.separator + fileName);
+			  vo.setGdsThumbImg(File.separator + "imgUpload" + ymdPath + File.separator + "s" + File.separator + "s_" + fileName);
+			  
+			 } else {  // ìƒˆë¡œìš´ íŒŒì¼ì´ ë“±ë¡ë˜ì§€ ì•Šì•˜ë‹¤ë©´
+			  // ê¸°ì¡´ ì´ë¯¸ì§€ë¥¼ ê·¸ëŒ€ë¡œ ì‚¬ìš©
+			  vo.setGdsImg(req.getParameter("gdsImg"));
+			  vo.setGdsThumbImg(req.getParameter("gdsThumbImg"));
+			  
+			 }
+			service.ImgModify(vo);
+			return "redirect:/board/listAll";
+			
+		}
+		
+		@ResponseBody
+		@RequestMapping(value = "/test123", method = RequestMethod.POST, produces = { "application/json; charset=utf-8" })
+		public HashMap<String, Object> test_2(@RequestBody Map<String, Object> params) {
+			System.out.println(params);
+			HashMap<String, Object> resultJson = new HashMap<>();
+			List<HashMap<String,Object>> outputs = new ArrayList<>();
+			List<HashMap<String,Object>> BCC = new ArrayList<>();
+	        HashMap<String,Object> template = new HashMap<>();
+	        HashMap<String, Object> basicCard = new HashMap<>();
+	        HashMap<String, Object> basicCard_Detail = new HashMap<>();
+	        HashMap<String, Object> thumbnail_Detail = new HashMap<>();
+	        
+	        HashMap<String, Object> title = new HashMap<>();
+	        HashMap<String, Object> description = new HashMap<>();
+	        HashMap<String, Object> thumbnail = new HashMap<>();
+	        
+	        /* ë°œí™” ì²˜ë¦¬ ë¶€ë¶„ * */
+	        HashMap<String,Object> userRequest =  (HashMap<String,Object>)params.get("userRequest");
+	        String utter = userRequest.get("utterance").toString().replace("\n","");
+
+	        String rtnStr = "";
+	        switch (utter){
+	            case "ë­ì•¼" : rtnStr = "ê¸°í›ˆ ì±—ë´‡ì…ë‹ˆë‹¤.";
+	                break;
+	            case "ã…‹ã…‹" : rtnStr = "ì €ë„ ê¸°ë¶„ì´ ì¢‹ë„¤ìš”";
+	                break;
+	            default: rtnStr = "ì•ˆë…•í•˜ì„¸ìš” ì±—ë´‡ì…ë‹ˆë‹¤.";
+	        }
+	        /* ë°œí™” ì²˜ë¦¬ ë*/
+	        title.put("title",rtnStr);
+	        description.put("description", "ë­ê°€ìˆì§€");
+	        
+	        thumbnail_Detail.put("imageUrl","http://k.kakaocdn.net/dn/83BvP/bl20duRC1Q1/lj3JUcmrzC53YIjNDkqbWK/i_6piz1p.jpg");
+	        
+	        basicCard_Detail.put("title", rtnStr);
+	        basicCard_Detail.put("description", "ë­ê°€ìˆì§€");
+	        basicCard_Detail.put("thumbnail",thumbnail_Detail);
+	    
+	       
+	       
+	        List<HashMap<String,Object>> quickReplies = new ArrayList<>();
+	        HashMap<String,Object> quickRepl = new HashMap<>();
+	        quickRepl.put("action","message");
+	        quickRepl.put("label","ì†í¥ë¯¼");
+	        quickRepl.put("messageText","ì†í¥ë¯¼");
+	        quickReplies.add(quickRepl);
+	       
+	        
+	        List<HashMap<String,Object>> buttons = new ArrayList<>();
+	        HashMap<String, Object> button_detail = new HashMap<>();
+	        HashMap<String, Object> button = new HashMap<>();
+	       
+	        button_detail.put("action", "message");
+	        button_detail.put( "label", "ì—´ì–´ë³´ê¸°");
+	        button_detail.put( "messageText", "ì§œì”! ìš°ë¦¬ê°€ ì°¾ë˜ ë³´ë¬¼ì…ë‹ˆë‹¤");
+	        buttons.add(button_detail);
+	        System.out.println(buttons);
+	        //button.put("buttons", buttons);
+	        basicCard_Detail.put("buttons", buttons);
+	        
+	        basicCard.put("basicCard",basicCard_Detail);
+	        
+	        outputs.add(basicCard);
+	        
+	        template.put("outputs",outputs);
+	        template.put("quickReplies",quickReplies);
+	      //  template.put("buttons",buttons);
+
+	        resultJson.put("version","2.0");
+	        resultJson.put("template",template);
+			System.out.println(resultJson);
+			return resultJson;
+		}	
 }
