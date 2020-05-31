@@ -457,9 +457,10 @@ public class BoardController {
 		}
 		
 		@ResponseBody
-		@RequestMapping(value = "/test123", method = RequestMethod.POST, produces = { "application/json; charset=utf-8" })
+		@RequestMapping(value = "/test123", method = RequestMethod.POST, headers = {"Accept=application/json"})
 		public HashMap<String, Object> test_2(@RequestBody Map<String, Object> params) {
 			System.out.println(params);
+			
 			HashMap<String, Object> resultJson = new HashMap<>();
 			List<HashMap<String,Object>> outputs = new ArrayList<>();
 			List<HashMap<String,Object>> BCC = new ArrayList<>();
@@ -467,59 +468,58 @@ public class BoardController {
 	        HashMap<String, Object> basicCard = new HashMap<>();
 	        HashMap<String, Object> basicCard_Detail = new HashMap<>();
 	        HashMap<String, Object> thumbnail_Detail = new HashMap<>();
-	        
-	        HashMap<String, Object> title = new HashMap<>();
-	        HashMap<String, Object> description = new HashMap<>();
-	        HashMap<String, Object> thumbnail = new HashMap<>();
-	        
+	 
 	        /* 발화 처리 부분 * */
-	        HashMap<String,Object> userRequest =  (HashMap<String,Object>)params.get("userRequest");
-	        String utter = userRequest.get("utterance").toString().replace("\n","");
+	        //HashMap<String,Object> userRequest =  (HashMap<String,Object>)params.get("userRequest");
+	        //String utter = userRequest.get("utterance").toString().replace("\n","");
 
 	        String rtnStr = "";
-	        switch (utter){
-	            case "뭐야" : rtnStr = "기훈 챗봇입니다.";
-	                break;
-	            case "ㅋㅋ" : rtnStr = "저도 기분이 좋네요";
-	                break;
-	            default: rtnStr = "안녕하세요 챗봇입니다.";
-	        }
+	       
 	        /* 발화 처리 끝*/
-	        title.put("title",rtnStr);
-	        description.put("description", "뭐가있지");
+	        
 	        
 	        thumbnail_Detail.put("imageUrl","http://k.kakaocdn.net/dn/83BvP/bl20duRC1Q1/lj3JUcmrzC53YIjNDkqbWK/i_6piz1p.jpg");
 	        
+	        /*베이직카드 제목 내용 이미지 만드는곳 */
 	        basicCard_Detail.put("title", rtnStr);
 	        basicCard_Detail.put("description", "뭐가있지");
 	        basicCard_Detail.put("thumbnail",thumbnail_Detail);
 	    
 	       
+	        
 	       
+	        /*버튼 세팅*/
+	        List<HashMap<String,Object>> buttons = new ArrayList<>();
+	        HashMap<String, Object> button_detail = new HashMap<>();
+	        button_detail.put("action", "message");
+	        button_detail.put( "label", "열어보기");
+	        button_detail.put( "messageText", "짜잔! 우리가 찾던 보물입니다");
+	        buttons.add(button_detail);   
+	        basicCard_Detail.put("buttons", buttons);
+	        
+	        /*퀵리플라이 세팅*/
 	        List<HashMap<String,Object>> quickReplies = new ArrayList<>();
 	        HashMap<String,Object> quickRepl = new HashMap<>();
 	        quickRepl.put("action","message");
 	        quickRepl.put("label","손흥민");
 	        quickRepl.put("messageText","손흥민");
 	        quickReplies.add(quickRepl);
-	       
 	        
-	        List<HashMap<String,Object>> buttons = new ArrayList<>();
-	        HashMap<String, Object> button_detail = new HashMap<>();
-	        HashMap<String, Object> button = new HashMap<>();
-	       
-	        button_detail.put("action", "message");
-	        button_detail.put( "label", "열어보기");
-	        button_detail.put( "messageText", "짜잔! 우리가 찾던 보물입니다");
-	        buttons.add(button_detail);
-	        System.out.println(buttons);
-	        //button.put("buttons", buttons);
-	        basicCard_Detail.put("buttons", buttons);
 	        
-	        basicCard.put("basicCard",basicCard_Detail);
+	        /*베이직 카드 여러개 삽입하는 부분*/
+	        List<HashMap<String,Object>> items = new ArrayList<>();
+	        items.add(basicCard_Detail);
+	        items.add(basicCard_Detail);
 	        
+	        /*아웃풋에 넣을 카드리스트, 타입을 만드는곳*/
+	        HashMap<String,Object> caro = new HashMap();
+	        caro.put("type", "basicCard");
+	        caro.put("items", items);
+	        
+	        basicCard.put("carousel",caro);
 	        outputs.add(basicCard);
-	        
+
+	       
 	        template.put("outputs",outputs);
 	        template.put("quickReplies",quickReplies);
 	      //  template.put("buttons",buttons);
