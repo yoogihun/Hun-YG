@@ -24,11 +24,21 @@
     
     
 </script>
+
+ <style>
+ 	#he{
+ 		color:red;
+ 	}
  
- 
+ </style>
+
+
 </head>
 <body>
- 
+ 	<script>
+ 	
+ 	</script>
+ 	
     <table class="table table-board" border="1px" width="80%" align="center">
         <tr>
         	<th style="width:10%" ></th>
@@ -52,11 +62,12 @@
     </c:forEach>
     </table>
     
+    <div>
     <c:if test="${msg == null }">
     	<input type ="button" name ="write" value="글작성" onclick="location.href='/board/create'">
     	<input type ="button" onclick="location.href='/member/login'" value="로그인화면">
     	</c:if>
-    
+    </div>
     <c:if test="${msg != null }">
     	
     	<input type ="button" onclick="location.href='/member/register'" value="가입하기">
@@ -130,6 +141,24 @@
 	
 <input type ="button" onclick="location.href='/board/javascripts'" value="지도">
 <a href="/board/javascripts">지도</a>
+
+
+<input type="button" id="download" value="다운로드">
+
+<script>
+document.getElementById('download').addEventListener('click',function(){
+	
+	var filePath = "C:/tmp/test.txt";
+    var fileName = "test.txt";
+                
+    location.href = "/contract/fileDownload?filePath="+filePath+"&fileName="+fileName;
+    
+})
+
+
+
+
+</script>
 </body>
 </html>
 

@@ -17,10 +17,14 @@ import org.hello.domain.ImgVO;
 import org.hello.domain.PageMaker;
 import org.hello.domain.PointVO;
 import org.hello.domain.ReplyVO;
+import org.hello.domain.Vo;
 import org.hello.service.BoardService;
 import org.hello.service.PointService;
 import org.hello.service.ReplyService;
 import org.member.memberVO.MemberVO;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +32,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -528,5 +534,68 @@ public class BoardController {
 	        resultJson.put("template",template);
 			System.out.println(resultJson);
 			return resultJson;
-		}	
+		}
+		
+		@RequestMapping(value = "/formFile", method = RequestMethod.GET)
+		public String img_form() throws Exception {
+			return "formFile";
+		}
+		
+		
+	
+
+		/**
+		 * 파일처리 컨트롤러
+		 * @param vo
+		 * @return
+		 */
+		@RequestMapping(value="/saveImage")
+		public String saveImage(Vo vo) {
+			try {
+				Map<String, Object> hmap = new HashMap<String, Object>();
+				hmap.put("img", vo.getImgFile().getBytes());
+				service.saveImage(hmap);	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return "redirect:/formFile";
+		}
+		
+		
+		@RequestMapping(value="/view")
+		public String view() {
+			return "view";
+		}
+		
+		
+		@RequestMapping(value="/getByteImage")
+		public ResponseEntity<byte[]> getByteImage() throws Exception {
+			Map<String, Object> map = service.getByteImage();
+		       byte[] imageContent = (byte[]) map.get("img");
+		       System.out.println(imageContent);
+		       final HttpHeaders headers = new HttpHeaders();
+		       headers.setContentType(org.springframework.http.MediaType.IMAGE_JPEG);
+		       
+		       return new ResponseEntity<byte[]>(imageContent, headers, HttpStatus.OK);
+		}
+
+		@RequestMapping(value = "/response/update", method = RequestMethod.POST, produces = {
+				"application/json; charset=utf-8" })
+		public void responseUpdate(HttpServletRequest req) throws Exception {
+			MultipartFile single_input_img_form = ((MultipartRequest) req).getFile("single_input_img_data");
+			System.out.println(single_input_img_form.getName());
+			System.out.println(single_input_img_form.getBytes());
+			
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			
+			hmap.put("img", single_input_img_form.getBytes());
+			service.saveImage(hmap);
+			
+			//Map<String, Object> hmap = new HashMap<String, Object>();
+			//hmap.put("img", );
+			//service.saveImage(hmap);
+		}
+		
+		
+		
 }

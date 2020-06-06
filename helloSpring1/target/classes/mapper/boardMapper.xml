@@ -72,5 +72,43 @@
 	<update id="updatecntBoard">
 		update bbs.hello_board set b_count = b_count+1 where b_no= #{b_no}
 	</update>
+	
+	<!-- 이미지등록 -->
+	<insert id="register_img">
+		insert into tbl_goods(
+		gdsImg,gdsThumbImg
+		)
+		values(
+		#{gdsImg},#{gdsThumbImg}
+		)
+	</insert>
+	
+	<select id="ImgView" resultType="org.hello.domain.ImgVO">
+		select 
+			gdsImg
+			,gdsThumbImg
+		from tbl_goods
+		where seq=30
+		
+	</select>
+	
+	<update id="ImgModify">
+		update tbl_goods
+			set
+				gdsImg = #{gdsImg},
+				gdsThumbImg = #{gdsThumbImg}
+			where seq =30
+	
+	</update>
+	
+	<insert id="saveImage" parameterType="java.util.Map">
+		INSERT INTO img_table VALUES(1,#{img})	
+	</insert>
+	
+	<select id="getByteImage" resultType="java.util.Map">
+		SELECT img
+		FROM img_table
+	</select>
+	
 </mapper>
 

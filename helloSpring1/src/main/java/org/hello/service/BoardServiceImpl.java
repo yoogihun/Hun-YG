@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.hello.dao.BoardDAO;
 import org.hello.domain.BoardVO;
 import org.hello.domain.Criteria;
+import org.hello.domain.ImgVO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -74,6 +75,35 @@ public class BoardServiceImpl implements BoardService {
         
        return dao.listCnt();
  
+    }
+    
+    @Override
+    public void register_img(ImgVO vo) throws Exception {
+        
+       dao.register_img(vo);
+ 
+    }
+    
+    @Override
+    public ImgVO ImgView() throws Exception {
+        
+       return dao.ImgView();
+ 
+    }
+    
+    @Override
+    public void ImgModify(ImgVO vo) throws Exception{
+    	dao.ImgModify(vo);
+    }
+    
+    @Override
+    public void saveImage(Map<String, Object> hmap) throws Exception{
+    	dao.saveImage(hmap);
+    }
+    
+    @Override
+    public Map<String, Object> getByteImage() throws Exception{
+    	return dao.getByteImage();
     }
 
 }

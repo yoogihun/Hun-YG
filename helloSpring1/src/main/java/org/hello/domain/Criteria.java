@@ -11,7 +11,7 @@ public class Criteria {
     
     public Criteria() {
         this.page = 1;
-        //화면에 보여줄 게시글의 수
+        
         this.perPageNum = 3;
     }
     

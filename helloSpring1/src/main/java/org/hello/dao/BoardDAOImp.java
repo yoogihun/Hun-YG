@@ -1,4 +1,5 @@
 package org.hello.dao;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import javax.inject.Inject;
 import org.apache.ibatis.session.SqlSession;
 import org.hello.domain.BoardVO;
 import org.hello.domain.Criteria;
+import org.hello.domain.ImgVO;
 import org.springframework.stereotype.Repository;
  
 @Repository
@@ -17,13 +19,13 @@ public class BoardDAOImp implements BoardDAO {
     
     private static String namespace = "org.hello.mapper.boardMapper";
  
-    //°Ô½ÃÆÇÃß°¡
+    //ï¿½Ô½ï¿½ï¿½ï¿½ï¿½ß°ï¿½
     @Override
     public void create(BoardVO vo) throws Exception {
         sqlSession.insert(namespace+".insertBoard", vo);
     }
     
-    //°Ô½ÃÆÇº¸±â
+    //ï¿½Ô½ï¿½ï¿½Çºï¿½ï¿½ï¿½
     @Override
     public List<BoardVO> listAll_Select(Map<String,Object> paramMap) throws Exception {
         
@@ -39,35 +41,35 @@ public class BoardDAOImp implements BoardDAO {
     }
     
     
-    //°Ô½ÃÆÇ »ó¼¼
+    //ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½ï¿½
     @Override
     public BoardVO read(Integer b_no) throws Exception {
         sqlSession.selectOne(namespace+".detailBoard", b_no);
         return sqlSession.selectOne(namespace+".detailBoard", b_no);
     }
  
-    //°Ô½ÃÆÇ »èÁ¦
+    //ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     @Override
     public void delete(Integer b_no) throws Exception {
         sqlSession.delete(namespace+".deleteBoard", b_no);
  
     }
  
-    //°Ô½ÃÆÇ ¼öÁ¤
+    //ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     @Override
     public void update(BoardVO vo) throws Exception {
         sqlSession.update(namespace+".updateBoard", vo);
  
     }
     
-    //°Ô½ÃÆÇ Á¶È¸¼ö
+    //ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ï¿½ï¿½
     @Override
     public void updatecnt(Integer b_no) throws Exception {
         sqlSession.update(namespace+".updatecntBoard", b_no);
  
     }
     
-    //°Ô½ÃÆÇ °Ë»ö
+    //ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
     @Override
     public BoardVO search(Integer b_no) throws Exception {
        return sqlSession.selectOne(namespace+".searchBoard", b_no);
@@ -80,6 +82,35 @@ public class BoardDAOImp implements BoardDAO {
 		
         
     }
+    @Override
+    public void register_img(ImgVO vo) throws Exception{
+        sqlSession.insert(namespace+".register_img", vo);
+		
+        
+    }
+    
+    @Override
+    public ImgVO ImgView() throws Exception{
+        return sqlSession.selectOne(namespace+".ImgView");
+		
+        
+    }
+    
+    @Override
+    public void ImgModify(ImgVO vo) throws Exception{
+    	sqlSession.update(namespace+".ImgModify",vo);
+    }
+    
+    @Override
+    public void saveImage(Map<String, Object> hmap) throws SQLException{
+    	sqlSession.insert(namespace+".saveImage",hmap);
+    }
+    
+    @Override
+    public Map<String, Object> getByteImage() throws Exception{
+    	return sqlSession.selectOne(namespace+".getByteImage");
+    }
+    
  
 }
 

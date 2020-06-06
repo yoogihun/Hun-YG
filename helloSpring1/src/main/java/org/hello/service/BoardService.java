@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.hello.domain.BoardVO;
 import org.hello.domain.Criteria;
+import org.hello.domain.ImgVO;
  
 public interface BoardService {
     
@@ -26,8 +27,16 @@ public interface BoardService {
     public BoardVO search(Integer b_no) throws Exception;
     
     public int listCnt() throws Exception;
-
+    
+    public void register_img(ImgVO vo) throws Exception;
 	
+    public ImgVO ImgView() throws Exception;
+    
+    public void ImgModify(ImgVO vo) throws Exception;
+
+	public void saveImage(Map<String, Object> hmap) throws Exception;
+	
+	public Map<String, Object> getByteImage() throws Exception;
 
 }
 

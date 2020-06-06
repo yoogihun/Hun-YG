@@ -9,6 +9,21 @@ public class ReplyVO {
 	private String content;
 	private String writer;
 	private Date regDate;
+	private String gdsImg;
+	
+	public String getGdsImg() {
+		return gdsImg;
+	}
+	public void setGdsImg(String gdsImg) {
+		this.gdsImg = gdsImg;
+	}
+	public String getGdsThumbImg() {
+		return gdsThumbImg;
+	}
+	public void setGdsThumbImg(String gdsThumbImg) {
+		this.gdsThumbImg = gdsThumbImg;
+	}
+	private String gdsThumbImg;
 	
 	
 	public int getB_no() {

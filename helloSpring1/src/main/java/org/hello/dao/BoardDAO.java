@@ -1,10 +1,12 @@
 package org.hello.dao;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 import org.hello.domain.BoardVO;
 import org.hello.domain.Criteria;
+import org.hello.domain.ImgVO;
 
 public interface BoardDAO {
 	public void create(BoardVO vo) throws Exception;
@@ -25,7 +27,15 @@ public interface BoardDAO {
     
     public int listCnt() throws Exception;
 
+	public void register_img(ImgVO vo) throws Exception;
 	
+	public ImgVO ImgView() throws Exception;
+	
+	public void ImgModify(ImgVO vo) throws Exception;
+	
+	public void saveImage(Map<String, Object> hmap) throws SQLException;
+	
+	public Map<String, Object> getByteImage() throws Exception;
 
 	
 }

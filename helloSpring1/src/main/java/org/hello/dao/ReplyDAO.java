@@ -16,4 +16,6 @@ public interface ReplyDAO {
 	public Map<String, Object> ReplyCk(ReplyVO vo) throws Exception;
 	
 	public void updateReply(ReplyVO vo) throws Exception;
+	
+	
 }
