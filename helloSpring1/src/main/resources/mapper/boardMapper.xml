@@ -110,5 +110,10 @@
 		FROM img_table
 	</select>
 	
+	<select id="getJson" resultType="java.lang.String">
+		SELECT jsonString
+		FROM bbs.jsontest
+	</select>
+	
 </mapper>
 

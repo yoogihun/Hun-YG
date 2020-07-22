@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
-@RequestMapping("/member") // url¿äÃ»ÀÌ /member·Î ½ÃÀÛÇÏ´Â °ÍÀº ¿©±â¼­ Ã³¸®ÇÑ´Ù
+@RequestMapping("/member") // urlï¿½ï¿½Ã»ï¿½ï¿½ /memberï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½â¼­ Ã³ï¿½ï¿½ï¿½Ñ´ï¿½
 public class MemberController {
 
 		@Inject
@@ -24,7 +24,7 @@ public class MemberController {
 		
 		@RequestMapping(value="/register",method=RequestMethod.GET) 
 		  public void getReg(MemberVO vo) throws Exception{
-		  System.out.println("/board/create ÀÔ´Ï´Ù. GET¹æ½Ä");
+		  System.out.println("/board/create ï¿½Ô´Ï´ï¿½. GETï¿½ï¿½ï¿½");
 		  
 		  }
 		 
@@ -38,11 +38,9 @@ public class MemberController {
 			service.register(vo);
 		}catch (Exception e){
 			
-			System.out.println("Áßº¹µÈ ¾ÆÀÌµðÀÔ´Ï´Ù.");
+			System.out.println("ï¿½ßºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ï¿½Ô´Ï´ï¿½.");
 			return "redirect:/member/login";
 		}
-			
-			
 			return "redirect:/member/login";
 			
 		}
@@ -58,7 +56,6 @@ public class MemberController {
 				session.setAttribute("member", null);
 				rttr.addFlashAttribute("msg", false);
 			}
-			
 			else {
 				session.setAttribute("member", login);
 			}
@@ -82,7 +79,7 @@ public class MemberController {
 		
 		@RequestMapping(value = "/modify", method = RequestMethod.POST)
 		public String modifypost(MemberVO vo, HttpSession session) throws Exception {
-			System.out.println("¼öÁ¤µ¿ÀÛ");
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 			
 			service.modify(vo);
 			

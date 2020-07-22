@@ -105,5 +105,10 @@ public class BoardServiceImpl implements BoardService {
     public Map<String, Object> getByteImage() throws Exception{
     	return dao.getByteImage();
     }
+    
+    @Override
+    public String jsonTest() throws Exception{
+    	return dao.jsonTest();
+    }
 
 }

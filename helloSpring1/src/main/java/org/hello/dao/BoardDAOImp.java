@@ -111,6 +111,11 @@ public class BoardDAOImp implements BoardDAO {
     	return sqlSession.selectOne(namespace+".getByteImage");
     }
     
+    @Override
+    public String jsonTest() throws Exception{
+    	return sqlSession.selectOne(namespace+".getJson");
+    }
+    
  
 }
 

@@ -597,5 +597,15 @@ public class BoardController {
 		}
 		
 		
+		@RequestMapping(value = "/moveLink", method = RequestMethod.GET)
+		public void move(PointVO vo, Model model, HttpSession session) throws Exception {
+			System.out.println("���˾�");
+			
+				
+		}
+		
+		
+		
+		
 		
 }

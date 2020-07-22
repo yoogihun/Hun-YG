@@ -36,6 +36,8 @@ public interface BoardDAO {
 	public void saveImage(Map<String, Object> hmap) throws SQLException;
 	
 	public Map<String, Object> getByteImage() throws Exception;
+	
+	public String jsonTest() throws Exception;
 
 	
 }

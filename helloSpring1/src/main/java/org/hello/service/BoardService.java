@@ -38,5 +38,7 @@ public interface BoardService {
 	
 	public Map<String, Object> getByteImage() throws Exception;
 
+	public String jsonTest() throws Exception;
+
 }
 
