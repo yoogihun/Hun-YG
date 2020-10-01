@@ -1,5 +1,4 @@
 package org.hello.controller;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,7 +95,7 @@ public class BoardController {
 	@RequestMapping(value = "/listAll", method = RequestMethod.GET)
 	public void listAll(Criteria cri, BoardVO board, Model model,HttpSession session) throws Exception {
 		
-		
+		test();
 		System.out.println("��ü��� ������ ��");
 		cri.setPerPageNum(10);
 		
@@ -113,7 +112,7 @@ public class BoardController {
 	    pageMaker.setTotalCount(test);
 	    
 	    System.out.println(list+"��ü����Ʈ");
-
+	   
         
               
    
@@ -140,7 +139,7 @@ public class BoardController {
 	    pageMaker.setCri(cri);
 	    pageMaker.setTotalCount(test);
 	    System.out.println(test);
-	    
+	   
 
         
            
@@ -604,6 +603,27 @@ public class BoardController {
 				
 		}
 		
+		private static void test() throws Exception{
+			  System.out.println("test");
+			  
+			  String key = "aes256-test-key!!";       // key는 16자 이상 
+			        AES256Util aes256 = new AES256Util(key);
+			         
+			        String text = "test용 데이터";
+			        String encText = aes256.aesEncode(text);
+			        String decText = aes256.aesDecode(encText);
+			         
+			        System.out.println("암호화할 문자 : " + text);
+			        System.out.println("암호화된 문자 : " + encText);
+			        System.out.println("복호화된 문자 : " + decText);
+			 }
+
+
+		@RequestMapping(value = "/jihyun", method = RequestMethod.GET)
+		public void album() throws Exception {
+			
+			
+		}
 		
 		
 		

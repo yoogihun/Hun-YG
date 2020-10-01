@@ -11,7 +11,6 @@
 	<form action ="/member/modify" method="post">	
 		<label>아이디</label>
 		<input type="text" name="userID" value="${member.userID }"/>
-		console.log("${ member.userName}")
 		<label>비밀번호</label>
 		<input type="text" name="userPW">
 		
