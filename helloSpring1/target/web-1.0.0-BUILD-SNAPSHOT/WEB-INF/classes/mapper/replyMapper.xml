@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace = "org.hello.mapper.replyMapper">
+<!-- 댓글 조회 -->
+	<select id="readReply" resultType="java.util.Map">
+		select
+			r_no as r_no,
+			content as content,
+			writer as writer,
+			regDate as regDate
+		from bbs.myReply
+			where b_no = #{b_no}
+	</select>
+
+<!-- 댓글 생성 -->
+	<insert id="CreateReply">
+		insert into bbs.myreply(b_no,r_no,content, writer, regDate)
+		values (#{b_no}, #{r_no}+1, #{content}, #{writer}, SYSDATE())
+	</insert>
+
+<!-- 댓글 생성 시 댓글 번호 조회 -->
+	<select id = "ReplyCk" resultType="java.util.Map">
+		select 
+			ifnull(max(r_no),0) as r_no
+		from bbs.myreply
+			where b_no = #{b_no}
+	
+	</select>
+
+<!-- 특정 댓글 조회 -->
+	<select id = "detailReply" resultType="java.util.Map">
+		select
+			content,
+			writer,
+			regDate
+		from bbs.myReply
+			where b_no = ${b_no} AND r_no = ${r_no}
+	
+	</select>	
+	
+	
+	
+<!-- 댓글 수정 -->
+	<update id="UpdateReply">
+		update bbs.myreply set content = ${content}
+			
+		where b_no = ${b_no} AND r_no = ${r_no}	
+	</update>
+	
+
+	
+	
+</mapper>

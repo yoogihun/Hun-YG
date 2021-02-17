@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ 
+<mapper namespace="org.hello.mapper.pointMapper">
+	<!-- 위치조회 -->
+	<select id="point_select" resultType="java.util.Map">
+		select point_id as point_id,
+			point_name as point_name,
+			point_lat as point_lat,
+			point_lng as point_lng
+		from bbs.marker_lat_lng
+	</select>
+	
+	<!-- 위치등록 -->
+	<insert id="point_reg">
+		insert into bbs.marker_lat_lng values(
+		#{point_id},#{point_name},#{point_lat},#{point_lng}
+		)
+	
+	</insert>
+	
+	<!-- 마지막 지점아이디 조회 -->
+	<select id ="point_id_select" resultType="java.util.Map">
+		select max(point_id) as point_id
+		from bbs.marker_lat_lng;
+	</select>
+	
+	<!-- 위치 수정 -->
+	<update id="point_modify">
+		update bbs.marker_lat_lng 
+			set 
+				point_name=#{point_name},
+				point_lat=#{point_lat},
+				point_lng=#{point_lng}
+			where point_id = #{point_id}
+	</update>
+</mapper>
